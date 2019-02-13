@@ -1,0 +1,57 @@
+{
+  "name": "chech-my-openvpn",
+  "productName": "CheckMyOpenVPN",
+  "version": "0.0.1",
+  "description": "OpenVPN status monitor",
+  "homepage": "https://github.com/eowo/check-my-openvpn",
+  "author": {
+    "email": "babik.janos@gmail.com",
+    "name": "eowo",
+    "url": "https://github.com/eowo/check-my-openvpn"
+  },
+  "main": "app/main.js",
+  "private": false,
+  "license": "MIT",
+  "scripts": {
+    "build:www": "cd src/www && yarn build",
+    "build:electron": "yarn tsc -p ./src/electron/.tsconfig.json"
+  },
+  "build": {
+    "appId": "com.eowo.check-my-openvpn",
+    "artifactName": "${productName}-${arch}.${ext}",
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "nsis": {
+      "shortcutName": "CheckMyOpenVPN"
+    },
+    "win": {
+      "publisherName": "eowo"
+    },
+    "linux": {
+      "publish": null,
+      "category": "Utility",
+      "desktop": {
+        "Name": "CheckMyOpenVPN",
+        "Comment": "OpenVPN Monitor",
+        "Type": "Application",
+        "Categories": "GTK;GNOME;Utility;"
+      },
+      "target": [
+        "deb",
+        "AppImage"
+      ]
+    }
+  },
+  "devDependencies": {
+    "electron": "^4.0.4",
+    "electron-builder": "^20.38.5",
+    "prettier": "1.16.4",
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^5.3.3",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3",
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3"
+  }
+}
