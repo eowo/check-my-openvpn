@@ -10,7 +10,11 @@ if (env.NODE_ENV === "development") {
 let mainWindow: Electron.BrowserWindow;
 
 function createMainWindow() {
-  const window = new BrowserWindow();
+  const window = new BrowserWindow({
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
 
   window.loadURL(
     formatUrl({
