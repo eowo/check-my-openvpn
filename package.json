@@ -13,6 +13,7 @@
   "private": false,
   "license": "MIT",
   "scripts": {
+    "dev": "yarn build:electron && NODE_ENV=development yarn electron app/main.js & yarn build:www --watch",
     "build:www": "cd src/www && yarn build",
     "build:electron": "yarn tsc -p ./src/electron/.tsconfig.json"
   },
@@ -46,6 +47,7 @@
   "devDependencies": {
     "electron": "^4.0.4",
     "electron-builder": "^20.38.5",
+    "electron-reload": "^1.4.0",
     "prettier": "1.16.4",
     "source-map-loader": "^0.2.4",
     "ts-loader": "^5.3.3",

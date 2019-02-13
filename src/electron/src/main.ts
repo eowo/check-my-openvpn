@@ -1,6 +1,11 @@
 import { app, BrowserWindow } from "electron";
+import { env } from "process";
 import * as path from "path";
 import { format as formatUrl } from "url";
+
+if (env.NODE_ENV === "development") {
+  require("electron-reload")(__dirname);
+}
 
 let mainWindow: Electron.BrowserWindow;
 
