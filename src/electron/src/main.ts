@@ -4,7 +4,7 @@ import * as path from "path";
 import { format as formatUrl } from "url";
 
 if (env.NODE_ENV === "development") {
-  require("electron-reload")(__dirname);
+  require("electron-reload")(`${__dirname}/app.bundle.js`);
 }
 
 let mainWindow: Electron.BrowserWindow;
