@@ -1,4 +1,3 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 
 module.exports = {
@@ -27,10 +26,5 @@ module.exports = {
       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
     ]
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "src", "index.html")
-    })
-  ],
   target: "node"
 };

@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --config webpack.config.dev.js"
+    "cp:index": "cp src/index.html ../../app/index.html",
+    "build": "yarn cp:index & webpack --config webpack.config.dev.js"
   },
   "devDependencies": {
     "@types/react": "^16.8.3",
     "@types/react-dom": "^16.8.1",
     "@types/styled-components": "^4.1.10",
-    "html-webpack-plugin": "^3.2.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "styled-components": "^4.1.3"

@@ -1,10 +1,11 @@
 import { app, BrowserWindow } from "electron";
 import { env } from "process";
 import * as path from "path";
+import * as os from "os";
 import { format as formatUrl } from "url";
 
 if (env.NODE_ENV === "development") {
-  require("electron-reload")(`${__dirname}/app.bundle.js`);
+  runElectronReload();
 }
 
 let mainWindow: Electron.BrowserWindow;
@@ -28,6 +29,10 @@ function createMainWindow() {
     mainWindow = null;
   });
 
+  if (env.NODE_ENV === "development") {
+    !!env.REACT_EXTENSION_DIR && runReactExtension();
+  }
+
   return window;
 }
 
@@ -46,3 +51,13 @@ app.on("activate", () => {
 app.on("ready", () => {
   mainWindow = createMainWindow();
 });
+
+function runReactExtension() {
+  BrowserWindow.addDevToolsExtension(
+    path.join(os.homedir(), env.REACT_EXTENSION_DIR)
+  );
+}
+
+function runElectronReload() {
+  require("electron-reload")(__dirname);
+}
