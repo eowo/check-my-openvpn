@@ -7,11 +7,16 @@
     "build": "yarn cp:index & webpack --config webpack.config.dev.js"
   },
   "devDependencies": {
+    "@types/d3": "^5.7.1",
+    "@types/ramda": "^0.25.50",
     "@types/react": "^16.8.3",
     "@types/react-dom": "^16.8.1",
     "@types/styled-components": "^4.1.10",
+    "d3": "^5.9.1",
+    "ramda": "^0.26.1",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
+    "rxjs": "^6.4.0",
     "styled-components": "^4.1.3"
   }
 }
