@@ -1,5 +1,5 @@
 import { Observable, Subject } from "rxjs";
-import { filter, map } from "rxjs/operators";
+import { filter, map, take } from "rxjs/operators";
 import { test, compose, match, last } from "ramda";
 
 export const pid: ([read, send]: [
@@ -16,7 +16,8 @@ export const pid: ([read, send]: [
             last,
             match(/pid=(\d*)/)
           )
-        )
+        ),
+        take(1)
       )
       .subscribe(observer);
   });

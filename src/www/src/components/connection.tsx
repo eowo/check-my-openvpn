@@ -1,13 +1,13 @@
 import * as React from "react";
 import styled from "styled-components";
-import { openVpnConnection, OpenVPNConnection } from "../openvpn";
+import { openVpn, OpenVPN } from "../openvpn";
+import { Loading } from "./loading";
 
 const Input = styled.input`
   color: black;
   font-size: 1em;
   padding: 0.25em 1em;
-  border: 2px solid palevioletred;
-  border-radius: 3px;
+  border: 1px solid gray;
 `;
 
 const Button = styled.button`
@@ -15,49 +15,105 @@ const Button = styled.button`
   font-size: 1em;
   margin: 0.1em;
   padding: 0.25em 1em;
-  border: 2px solid gray;
-  border-radius: 3px;
+  &:disabled {
+    background-color: gray;
+  }
 `;
 
-const ConnectBtn = styled(Button)`
+const ConnectButton = styled(Button)`
   background-color: green;
 `;
 
-const DisconnectBtn = styled(Button)`
+const DisconnectButton = styled(Button)`
   background-color: red;
 `;
 
-export class ConnectionForm extends React.Component {
-  private inputRef: React.RefObject<HTMLInputElement>;
-  private openVPNConnection: OpenVPNConnection;
+enum Status {
+  Disconnected,
+  Connected,
+  Connecting
+}
+
+interface State {
+  status: Status;
+  host: string;
+  port: number;
+}
+
+export class ConnectionForm extends React.Component<{}, State> {
+  private openVPN: OpenVPN;
+  static defaultState: State = {
+    status: Status.Disconnected,
+    host: "10.8.0.1",
+    port: 5555
+  };
 
   constructor(props) {
     super(props);
-    this.inputRef = React.createRef();
-    this.openVPNConnection = openVpnConnection();
+    this.state = ConnectionForm.defaultState;
+    this.openVPN = openVpn();
+  }
+
+  handleHostChange(event) {
+    this.setState({ host: event.target.value });
+  }
+
+  handlePortChange(event) {
+    this.setState({ port: event.target.value });
   }
 
   connect() {
-    this.openVPNConnection.connect("10.8.0.1", 5555);
+    this.setState({ status: Status.Connecting });
+    this.openVPN.connect(this.state.host, this.state.port).subscribe({
+      next: commands => {
+        commands.pid.subscribe({
+          next: pid => console.log(pid)
+        });
+      },
+      error: e => this.setState({ status: Status.Disconnected }),
+      complete: () => this.setState({ status: Status.Connected })
+    });
   }
 
   disconnect() {
-    this.openVPNConnection.disconnect();
+    this.openVPN.disconnect();
+    this.setState(ConnectionForm.defaultState);
   }
 
   render() {
+    const { status } = this.state;
+
     return (
       <React.Fragment>
-        <Input
-          ref={this.inputRef}
-          onMouseEnter={() => {
-            this.inputRef.current!.focus();
-          }}
-        />
-        <ConnectBtn onClick={() => this.connect()}>Connect</ConnectBtn>
-        <DisconnectBtn onClick={() => this.disconnect()}>
+        <label>
+          Host:
+          <Input
+            type="text"
+            value={this.state.host}
+            onChange={this.handleHostChange}
+          />
+        </label>
+        <label>
+          Port:
+          <Input
+            type="number"
+            value={this.state.port}
+            onChange={this.handlePortChange}
+          />
+        </label>
+        <ConnectButton
+          onClick={() => this.connect()}
+          disabled={status === Status.Connected || status === Status.Connecting}
+        >
+          Connect
+        </ConnectButton>
+        <DisconnectButton
+          onClick={() => this.disconnect()}
+          disabled={status === Status.Disconnected}
+        >
           Disconnect
-        </DisconnectBtn>
+        </DisconnectButton>
+        {status === Status.Connecting && <Loading />}
       </React.Fragment>
     );
   }

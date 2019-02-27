@@ -1,6 +1,6 @@
 import { Socket } from "net";
-import { Observable, from, Observer, fromEvent, Subject, race } from "rxjs";
-import { tap, scan, filter, map, mergeMap, mapTo } from "rxjs/operators";
+import { Observable, from, Observer, fromEvent, Subject } from "rxjs";
+import { tap, scan, filter, map, mergeMap } from "rxjs/operators";
 import {
   compose,
   converge,
@@ -59,14 +59,6 @@ export const getRxSocket = (source: Observable<Socket>) =>
   new Observable<[Observable<string>, Subject<string>]>(observer =>
     source
       .pipe(
-        filter(socket => socket !== undefined),
-        mergeMap(socket =>
-          race(
-            fromEvent<string>(socket, "connect").pipe(mapTo(socket)),
-            fromEvent<Error>(socket, "error").pipe(mapTo(undefined))
-          )
-        ),
-        filter((socket: Socket | undefined) => socket !== undefined),
         map(
           converge((read, write) => [read, write], [
             createObservableSocket,

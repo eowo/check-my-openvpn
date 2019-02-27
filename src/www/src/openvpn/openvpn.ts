@@ -1,58 +1,57 @@
 import { createConnection, Socket } from "net";
 import { getRxSocket } from "./get-rx-socket";
-import { Observable, Subject, ReplaySubject } from "rxjs";
-import { take } from "rxjs/operators";
-import { log } from "./log";
-import { pid } from "./pid";
-import { status } from "./status";
-import converge from "ramda/es/converge";
-
-export interface Commands {
-  log: Observable<string>;
-  pid: Observable<string>;
-  status: Observable<string[]>;
-}
-
-const getCommands = (
-  rxSocket: [Observable<string>, Subject<string>]
-): Commands =>
-  converge(
-    (log, pid, status) => ({
-      log,
-      pid,
-      status
-    }),
-    [log, pid, status]
-  )(rxSocket);
+import {
+  Observable,
+  fromEvent,
+  ReplaySubject,
+  of,
+  Subscriber,
+  throwError,
+  race
+} from "rxjs";
+import { take, mapTo, mergeMap, tap } from "rxjs/operators";
+import { Commands, getCommands } from "./get-commands";
 
 const connect = (storedSocket: ReplaySubject<Socket>) => (
   host: string,
   port: number
-) => storedSocket.next(createConnection({ host, port }));
+) =>
+  new Observable((observer: Subscriber<Commands>) => {
+    of(createConnection({ host, port }))
+      .pipe(
+        mergeMap((socket: Socket) =>
+          race(
+            fromEvent<string>(socket, "connect").pipe(mapTo(socket)),
+            fromEvent<Error>(socket, "error").pipe(
+              mergeMap(error => throwError(error))
+            )
+          )
+        ),
+        take(1),
+        tap((socket: Socket) => storedSocket.next(socket)),
+        getRxSocket,
+        getCommands
+      )
+      .subscribe({
+        next: (commands: Commands) => observer.next(commands),
+        error: error => observer.error(error),
+        complete: () => observer.complete()
+      });
+  });
 
-const commands = (
-  source: Observable<[Observable<string>, Subject<string>]>
-): Observable<Commands> =>
-  new Observable(observer =>
-    source.subscribe({
-      next: rw => observer.next(getCommands(rw))
-    })
-  );
-
-const storedSocket = new ReplaySubject<Socket>();
-
-export interface OpenVPNConnection {
-  connect: (host: string, port: number) => void;
+export interface OpenVPN {
+  connect: (host: string, port: number) => Observable<Commands>;
   disconnect: () => void;
 }
 
-export const openVpnConnection = (): OpenVPNConnection => ({
-  connect: connect(storedSocket),
-  disconnect: () =>
-    storedSocket.pipe(take(1)).subscribe({
-      next: socket => socket.destroy()
-    })
-});
+export const openVpn = (): OpenVPN => {
+  const storedSocket = new ReplaySubject<Socket>(1);
 
-export const openVpnCommands = (): Observable<Commands> =>
-  commands(storedSocket.pipe(getRxSocket));
+  return {
+    connect: connect(storedSocket),
+    disconnect: () =>
+      storedSocket.pipe(take(1)).subscribe({
+        next: socket => socket.end()
+      })
+  };
+};
