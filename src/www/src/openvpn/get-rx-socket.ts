@@ -1,5 +1,5 @@
 import { Socket } from "net";
-import { Observable, from, Observer, fromEvent, Subject } from "rxjs";
+import { Observable, from, fromEvent, Subject, bindNodeCallback } from "rxjs";
 import { tap, scan, filter, map, mergeMap } from "rxjs/operators";
 import {
   compose,
@@ -26,33 +26,44 @@ const collectPackage = (acc: string[], cur: string[]) => {
     : concat(acc, cur);
 };
 
-const createObservableSocket: (socket: Socket) => Observable<string> = socket =>
-  Observable.create((observer: Observer<string | Error>) => {
-    fromEvent(socket, "data")
-      .pipe(
-        map((data: Uint8Array) => data.toString()),
-        tap(console.log),
-        map(split(/\n/)),
-        scan(collectPackage, []),
-        filter(isCompletePackage),
-        map((packages: string[]) => init(packages)),
-        mergeMap((packages: string[]) => from(packages))
-      )
-      .subscribe((msg: string) => observer.next(msg));
-    fromEvent(socket, "error").subscribe((error: Error) =>
-      observer.error(error)
-    );
-    fromEvent(socket, "close").subscribe((hadError: boolean) =>
-      hadError
-        ? observer.error("Socket was closed due to a transmission error")
-        : observer.complete()
-    );
-  });
+const createObservableSocket: (
+  socket: Socket
+) => Observable<string> = socket => {
+  const observer = new Subject<string>();
+  fromEvent(socket, "data")
+    .pipe(
+      map((data: Uint8Array) => data.toString()),
+      tap(console.log),
+      map(split(/\n/)),
+      scan(collectPackage, []),
+      filter(isCompletePackage),
+      map((packages: string[]) => init(packages)),
+      mergeMap((packages: string[]) => from(packages))
+    )
+    .subscribe((msg: string) => observer.next(msg));
+  fromEvent(socket, "error").subscribe((error: Error) => observer.error(error));
+  fromEvent(socket, "close").subscribe((hadError: boolean) =>
+    hadError
+      ? observer.error("Socket was closed due to a transmission error")
+      : observer.complete()
+  );
+
+  return observer.asObservable();
+};
 
 const createObserverSocket = (socket: Socket) => {
-  const s = new Subject<string>();
-  s.subscribe({ next: cmd => socket.write(cmd) });
-  return s;
+  const socketSubject = new Subject<string>();
+  const socketWrite = (cmd: string, cb: () => void) =>
+    socket.write(cmd, "utf8", cb);
+
+  socketSubject
+    .pipe(
+      filter(() => !socket.destroyed),
+      mergeMap((cmd: string) => bindNodeCallback(socketWrite)(cmd))
+    )
+    .subscribe();
+
+  return socketSubject;
 };
 
 export const getRxSocket = (source: Observable<Socket>) =>
