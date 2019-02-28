@@ -1,30 +1,38 @@
 import * as React from "react";
 import styled from "styled-components";
-import { openVpnCommands, Commands } from "../openvpn";
+import { Commands } from "../openvpn";
 import { mergeMap } from "rxjs/operators";
-import { Subscription } from "rxjs";
+import { Subscription, interval } from "rxjs";
+import CommandsContext from "./commands-context";
 
 const StatusText = styled.ul`
   list-style-type: none;
 `;
 
-interface StatusProps {}
-interface StatusState {
+interface Props {}
+interface State {
   status: string[];
 }
 
-export class Status extends React.Component<StatusProps, StatusState> {
+export class Status extends React.Component<Props, State> {
+  static contextType = CommandsContext;
   private subscription: Subscription = undefined;
-  constructor(props: StatusProps) {
+
+  constructor(props: Props) {
     super(props);
     this.state = { status: [] };
   }
 
   componentDidMount() {
-    this.subscription = openVpnCommands()
-      .pipe(mergeMap(({ status }: Commands) => status))
+    const { commandsSource } = this.context;
+    this.subscription = commandsSource
+      .pipe(
+        mergeMap(({ status }: Commands) =>
+          interval(1000).pipe(mergeMap(() => status))
+        )
+      )
       .subscribe({
-        next: status => this.setState({ status })
+        next: (status: string[]) => this.setState({ status })
       });
   }
 

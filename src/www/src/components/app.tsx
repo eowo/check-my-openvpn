@@ -4,6 +4,7 @@ import { Pid } from "./pid";
 import { ConnectionForm } from "./connection";
 import { Status } from "./status";
 import { Log } from "./log";
+import { Commands } from "../openvpn";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -21,13 +22,29 @@ const Title = styled.h1`
   color: black;
 `;
 
-export const App = () => (
-  <React.Fragment>
-    <GlobalStyle light />
-    <Title>CheckMyOpenVpn</Title>
-    <ConnectionForm />
-    <Pid />
-    <Status />
-    <Log />
-  </React.Fragment>
-);
+interface Props {}
+interface State {}
+
+export class App extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.setCommands.bind(this);
+  }
+
+  setCommands(commands: Commands) {
+    this.setState({ commands });
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <GlobalStyle light />
+        <Title>CheckMyOpenVpn</Title>
+        <ConnectionForm />
+        <Pid />
+        <Status />
+        <Log />
+      </React.Fragment>
+    );
+  }
+}

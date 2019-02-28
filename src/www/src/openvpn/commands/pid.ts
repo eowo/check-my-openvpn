@@ -1,23 +1,28 @@
-import { Observable, Subject } from "rxjs";
-import { filter, map, take } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { filter, map, take, mergeMap } from "rxjs/operators";
 import { test, compose, match, last } from "ramda";
+import { ObservableSocketWrite, ObservableSocketRead } from "../get-rx-socket";
 
 export const pid: ([read, send]: [
-  Observable<string>,
-  Subject<string>
+  ObservableSocketRead,
+  ObservableSocketWrite
 ]) => Observable<string> = ([read, send]) =>
   new Observable(observer => {
-    send.next("pid\r\n");
-    read
+    send("pid\r\n")
       .pipe(
-        filter(test(/^SUCCESS: pid=/)),
-        map(
-          compose<string, string[], string>(
-            last,
-            match(/pid=(\d*)/)
+        filter((sent: boolean) => sent),
+        mergeMap(() =>
+          read.pipe(
+            filter(test(/^SUCCESS: pid=/)),
+            map(
+              compose<string, string[], string>(
+                last,
+                match(/pid=(\d*)/)
+              )
+            ),
+            take(1)
           )
-        ),
-        take(1)
+        )
       )
       .subscribe(observer);
   });

@@ -1,6 +1,21 @@
 import { Socket } from "net";
-import { Observable, from, fromEvent, Subject, bindNodeCallback } from "rxjs";
-import { tap, scan, filter, map, mergeMap } from "rxjs/operators";
+import {
+  Observable,
+  from,
+  fromEvent,
+  Subject,
+  bindNodeCallback,
+  of
+} from "rxjs";
+import {
+  tap,
+  scan,
+  mapTo,
+  filter,
+  map,
+  mergeMap,
+  catchError
+} from "rxjs/operators";
 import {
   compose,
   converge,
@@ -26,9 +41,8 @@ const collectPackage = (acc: string[], cur: string[]) => {
     : concat(acc, cur);
 };
 
-const createObservableSocket: (
-  socket: Socket
-) => Observable<string> = socket => {
+export type ObservableSocketRead = Observable<string>;
+const createObservableSocketRead = (socket: Socket): ObservableSocketRead => {
   const observer = new Subject<string>();
   fromEvent(socket, "data")
     .pipe(
@@ -51,29 +65,32 @@ const createObservableSocket: (
   return observer.asObservable();
 };
 
-const createObserverSocket = (socket: Socket) => {
-  const socketSubject = new Subject<string>();
+export type ObservableSocketWrite = (command: string) => Observable<boolean>;
+const createObservableSocketWrite = (socket: Socket): ObservableSocketWrite => (
+  command: string
+) => {
   const socketWrite = (cmd: string, cb: () => void) =>
     socket.write(cmd, "utf8", cb);
-
-  socketSubject
-    .pipe(
-      filter(() => !socket.destroyed),
-      mergeMap((cmd: string) => bindNodeCallback(socketWrite)(cmd))
-    )
-    .subscribe();
-
-  return socketSubject;
+  return new Observable<boolean>(observer =>
+    of(socket)
+      .pipe(
+        filter(() => !socket.destroyed),
+        mergeMap(() => bindNodeCallback(socketWrite)(command)),
+        mapTo(true),
+        catchError(_ => of(false))
+      )
+      .subscribe(observer)
+  );
 };
 
 export const getRxSocket = (source: Observable<Socket>) =>
-  new Observable<[Observable<string>, Subject<string>]>(observer =>
+  new Observable<[ObservableSocketRead, ObservableSocketWrite]>(observer =>
     source
       .pipe(
         map(
           converge((read, write) => [read, write], [
-            createObservableSocket,
-            createObserverSocket
+            createObservableSocketRead,
+            createObservableSocketWrite
           ])
         )
       )

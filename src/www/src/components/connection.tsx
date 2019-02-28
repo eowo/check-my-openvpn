@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { openVpn, OpenVPN } from "../openvpn";
 import { Loading } from "./loading";
+import CommandsContext from "./commands-context";
 
 const Input = styled.input`
   color: black;
@@ -34,41 +35,43 @@ enum Status {
   Connecting
 }
 
+interface Props {}
 interface State {
   status: Status;
   host: string;
   port: number;
 }
 
-export class ConnectionForm extends React.Component<{}, State> {
-  private openVPN: OpenVPN;
+export class ConnectionForm extends React.Component<Props, State> {
+  static contextType = CommandsContext;
   static defaultState: State = {
     status: Status.Disconnected,
     host: "10.8.0.1",
     port: 5555
   };
 
-  constructor(props) {
+  private openVPN: OpenVPN;
+
+  constructor(props: Props) {
     super(props);
     this.state = ConnectionForm.defaultState;
     this.openVPN = openVpn();
   }
 
-  handleHostChange(event) {
+  handleHostChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ host: event.target.value });
   }
 
-  handlePortChange(event) {
-    this.setState({ port: event.target.value });
+  handlePortChange(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ port: parseInt(event.target.value) });
   }
 
   connect() {
+    const { commandsSource } = this.context;
     this.setState({ status: Status.Connecting });
     this.openVPN.connect(this.state.host, this.state.port).subscribe({
       next: commands => {
-        commands.pid.subscribe({
-          next: pid => console.log(pid)
-        });
+        commandsSource.next(commands);
       },
       error: e => this.setState({ status: Status.Disconnected }),
       complete: () => this.setState({ status: Status.Connected })

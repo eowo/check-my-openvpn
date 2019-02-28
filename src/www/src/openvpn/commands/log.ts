@@ -1,20 +1,26 @@
 import { Observable } from "rxjs";
-import { filter, take, timeout } from "rxjs/operators";
+import { filter, take, mergeMap, timeout } from "rxjs/operators";
 import { test } from "ramda";
+import { ObservableSocketWrite, ObservableSocketRead } from "../get-rx-socket";
 
-export const logEnable: ([read, send]) => (
-  on: boolean
-) => Observable<string> = ([read, send]) => (on: boolean) =>
-  Observable.create(observer => {
-    send.next(`log ${on ? "on" : "off"}\r\n`);
+export const logEnable: ([read, send]: [
+  ObservableSocketRead,
+  ObservableSocketWrite
+]) => (on: boolean) => Observable<string> = ([read, send]) => (on: boolean) =>
+  new Observable(observer => {
     const responseRegEx = new RegExp(
       `^SUCCESS: real-time log notification set to ${on ? "ON" : "OFF"}`
     );
-    read
+    send(`log ${on ? "on" : "off"}\r\n`)
       .pipe(
-        filter(test(responseRegEx)),
-        timeout(2000),
-        take(1)
+        filter((sent: boolean) => sent),
+        mergeMap(() =>
+          read.pipe(
+            filter(test(responseRegEx)),
+            timeout(2000),
+            take(1)
+          )
+        )
       )
       .subscribe(observer);
   });

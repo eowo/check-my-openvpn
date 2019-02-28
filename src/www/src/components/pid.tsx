@@ -1,8 +1,9 @@
 import * as React from "react";
 import styled from "styled-components";
-import { openVpnCommands, Commands } from "../openvpn";
 import { mergeMap } from "rxjs/operators";
 import { Subscription } from "rxjs";
+import CommandsContext from "./commands-context";
+import { Commands } from "../openvpn";
 
 const PidText = styled.div`
   color: blue;
@@ -15,17 +16,20 @@ interface PidState {
 }
 
 export class Pid extends React.Component<PidProps, PidState> {
+  static contextType = CommandsContext;
   private subscription: Subscription = undefined;
+
   constructor(props: PidProps) {
     super(props);
     this.state = { pid: "" };
   }
 
   componentDidMount() {
-    this.subscription = openVpnCommands()
+    const { commandsSource } = this.context;
+    this.subscription = commandsSource
       .pipe(mergeMap(({ pid }: Commands) => pid))
       .subscribe({
-        next: pid => this.setState({ pid })
+        next: (pid: string) => this.setState({ pid })
       });
   }
 
