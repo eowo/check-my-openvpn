@@ -1,33 +1,33 @@
 import { Socket } from "net";
 import {
-  Observable,
-  from,
-  fromEvent,
-  Subject,
-  bindNodeCallback,
-  of
-} from "rxjs";
-import {
-  tap,
-  scan,
-  mapTo,
-  filter,
-  map,
-  mergeMap,
-  catchError
-} from "rxjs/operators";
-import {
   compose,
+  concat,
   converge,
   head,
-  isEmpty,
-  concat,
-  last,
   init,
+  isEmpty,
+  last,
+  split,
   tail,
-  unnest,
-  split
+  unnest
 } from "ramda";
+import {
+  bindNodeCallback,
+  from,
+  fromEvent,
+  Observable,
+  of,
+  Subject
+} from "rxjs";
+import {
+  catchError,
+  filter,
+  map,
+  mapTo,
+  mergeMap,
+  scan,
+  tap
+} from "rxjs/operators";
 
 const isCompletePackage = compose<ReadonlyArray<string>, any, boolean>(
   isEmpty,
@@ -47,6 +47,7 @@ const createObservableSocketRead = (socket: Socket): ObservableSocketRead => {
   fromEvent(socket, "data")
     .pipe(
       map((data: Uint8Array) => data.toString()),
+      // tslint:disable-next-line
       tap(console.log),
       map(split(/\n/)),
       scan(collectPackage, []),
@@ -71,20 +72,20 @@ const createObservableSocketWrite = (socket: Socket): ObservableSocketWrite => (
 ) => {
   const socketWrite = (cmd: string, cb: () => void) =>
     socket.write(cmd, "utf8", cb);
-  return new Observable<boolean>(observer =>
+  return new Observable<boolean>((observer) =>
     of(socket)
       .pipe(
         filter(() => !socket.destroyed),
         mergeMap(() => bindNodeCallback(socketWrite)(command)),
         mapTo(true),
-        catchError(_ => of(false))
+        catchError((_) => of(false))
       )
       .subscribe(observer)
   );
 };
 
 export const getRxSocket = () => (source: Observable<Socket>) =>
-  new Observable<[ObservableSocketRead, ObservableSocketWrite]>(observer =>
+  new Observable<[ObservableSocketRead, ObservableSocketWrite]>((observer) =>
     source
       .pipe(
         map(

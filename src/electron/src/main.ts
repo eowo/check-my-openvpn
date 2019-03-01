@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from "electron";
-import { env } from "process";
-import * as path from "path";
 import * as os from "os";
+import * as path from "path";
+import { env } from "process";
 import { format as formatUrl } from "url";
 
 if (env.NODE_ENV === "development") {
@@ -29,8 +29,8 @@ function createMainWindow() {
     mainWindow = null;
   });
 
-  if (env.NODE_ENV === "development") {
-    !!env.REACT_EXTENSION_DIR && runReactExtension();
+  if (env.NODE_ENV === "development" && env.REACT_EXTENSION_DIR) {
+    runReactExtension();
   }
 
   return window;

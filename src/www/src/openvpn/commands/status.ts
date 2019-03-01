@@ -1,20 +1,20 @@
-import { Observable, TimeoutError, of, throwError } from "rxjs";
+import { compose, concat, last, test } from "ramda";
+import { Observable, of, throwError, TimeoutError } from "rxjs";
 import {
+  catchError,
   filter,
   mergeMap,
   scan,
   take,
-  timeout,
-  catchError
+  timeout
 } from "rxjs/operators";
-import { test, concat, compose, last } from "ramda";
-import { ObservableSocketWrite, ObservableSocketRead } from "../get-rx-socket";
+import { ObservableSocketRead, ObservableSocketWrite } from "../get-rx-socket";
 
 export const status: ([read, send]: [
   ObservableSocketRead,
   ObservableSocketWrite
 ]) => Observable<string[]> = ([read, send]) =>
-  new Observable(observer => {
+  new Observable((observer) => {
     send("status 2\r\n")
       .pipe(
         filter((sent: boolean) => sent),

@@ -1,9 +1,9 @@
+import { converge } from "ramda";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { converge } from "ramda";
-import { logEnable, status, pid } from "./commands";
+import { logEnable, pid, status } from "./commands";
+import { ObservableSocketRead, ObservableSocketWrite } from "./get-rx-socket";
 import { log } from "./real-time-messages";
-import { ObservableSocketWrite, ObservableSocketRead } from "./get-rx-socket";
 
 export interface Commands {
   logEnable: (on: true) => Observable<string>;
@@ -15,16 +15,16 @@ export interface Commands {
 export const getCommands = () => (
   source: Observable<[ObservableSocketRead, ObservableSocketWrite]>
 ): Observable<Commands> =>
-  new Observable(observer =>
+  new Observable((observer) =>
     source
       .pipe(
         map(
           converge(
-            (logEnable, pid, status, log) => ({
-              logEnable,
-              pid,
-              status,
-              log
+            (obsLogEnable, obsPid, obsStatus, obsLog) => ({
+              logEnable: obsLogEnable,
+              pid: obsPid,
+              status: obsStatus,
+              log: obsLog
             }),
             [logEnable, pid, status, log]
           )

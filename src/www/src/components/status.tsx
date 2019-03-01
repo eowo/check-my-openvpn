@@ -1,8 +1,8 @@
 import * as React from "react";
+import { interval, Subscription } from "rxjs";
+import { mergeMap } from "rxjs/operators";
 import styled from "styled-components";
 import { Commands } from "../openvpn";
-import { mergeMap } from "rxjs/operators";
-import { Subscription, interval } from "rxjs";
 import CommandsContext from "./commands-context";
 
 const StatusText = styled.ul`
@@ -15,7 +15,7 @@ interface State {
 }
 
 export class Status extends React.Component<Props, State> {
-  static contextType = CommandsContext;
+  public static contextType = CommandsContext;
   private subscription: Subscription = undefined;
 
   constructor(props: Props) {
@@ -23,7 +23,7 @@ export class Status extends React.Component<Props, State> {
     this.state = { status: [] };
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     const { commandsSource } = this.context;
     this.subscription = commandsSource
       .pipe(
@@ -36,11 +36,11 @@ export class Status extends React.Component<Props, State> {
       });
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     this.subscription.unsubscribe();
   }
 
-  render() {
+  public render() {
     return (
       <StatusText>
         {this.state.status.map((line: string, ix: number) => (

@@ -1,23 +1,23 @@
 import { createConnection, Socket } from "net";
-import { getRxSocket } from "./get-rx-socket";
 import {
-  Observable,
   fromEvent,
-  ReplaySubject,
+  Observable,
   of,
+  race,
+  ReplaySubject,
   Subscriber,
-  throwError,
-  race
+  throwError
 } from "rxjs";
 import {
-  take,
-  timeout,
+  catchError,
   mapTo,
   mergeMap,
+  take,
   tap,
-  catchError
+  timeout
 } from "rxjs/operators";
 import { Commands, getCommands } from "./get-commands";
+import { getRxSocket } from "./get-rx-socket";
 
 const connect = (storedSocket: ReplaySubject<Socket>) => (
   host: string,
@@ -32,13 +32,13 @@ const connect = (storedSocket: ReplaySubject<Socket>) => (
               take(1),
               mapTo(socket),
               timeout(3000),
-              catchError(error => {
+              catchError((error) => {
                 socket.destroy();
                 return throwError(error);
               })
             ),
             fromEvent<Error>(socket, "error").pipe(
-              mergeMap(error => throwError(error))
+              mergeMap((error) => throwError(error))
             )
           )
         ),
@@ -61,7 +61,7 @@ export const openVpn = (): OpenVPN => {
     connect: connect(storedSocket),
     disconnect: () =>
       storedSocket.pipe(take(1)).subscribe({
-        next: socket => socket.end()
+        next: (socket) => socket.end()
       })
   };
 };
