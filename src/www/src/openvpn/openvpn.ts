@@ -9,7 +9,14 @@ import {
   throwError,
   race
 } from "rxjs";
-import { take, mapTo, mergeMap, tap } from "rxjs/operators";
+import {
+  take,
+  timeout,
+  mapTo,
+  mergeMap,
+  tap,
+  catchError
+} from "rxjs/operators";
 import { Commands, getCommands } from "./get-commands";
 
 const connect = (storedSocket: ReplaySubject<Socket>) => (
@@ -21,22 +28,25 @@ const connect = (storedSocket: ReplaySubject<Socket>) => (
       .pipe(
         mergeMap((socket: Socket) =>
           race(
-            fromEvent<string>(socket, "connect").pipe(mapTo(socket)),
+            fromEvent<string>(socket, "connect").pipe(
+              take(1),
+              mapTo(socket),
+              timeout(3000),
+              catchError(error => {
+                socket.destroy();
+                return throwError(error);
+              })
+            ),
             fromEvent<Error>(socket, "error").pipe(
               mergeMap(error => throwError(error))
             )
           )
         ),
-        take(1),
         tap((socket: Socket) => storedSocket.next(socket)),
-        getRxSocket,
-        getCommands
+        getRxSocket(),
+        getCommands()
       )
-      .subscribe({
-        next: (commands: Commands) => observer.next(commands),
-        error: error => observer.error(error),
-        complete: () => observer.complete()
-      });
+      .subscribe(observer);
   });
 
 export interface OpenVPN {

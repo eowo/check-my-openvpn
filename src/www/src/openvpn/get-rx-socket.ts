@@ -83,7 +83,7 @@ const createObservableSocketWrite = (socket: Socket): ObservableSocketWrite => (
   );
 };
 
-export const getRxSocket = (source: Observable<Socket>) =>
+export const getRxSocket = () => (source: Observable<Socket>) =>
   new Observable<[ObservableSocketRead, ObservableSocketWrite]>(observer =>
     source
       .pipe(
@@ -94,15 +94,5 @@ export const getRxSocket = (source: Observable<Socket>) =>
           ])
         )
       )
-      .subscribe({
-        next([read, write]) {
-          observer.next([read, write]);
-        },
-        error(err) {
-          observer.error(err);
-        },
-        complete() {
-          observer.complete();
-        }
-      })
+      .subscribe(observer)
   );

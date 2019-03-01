@@ -12,7 +12,7 @@ export interface Commands {
   status: Observable<string[]>;
 }
 
-export const getCommands = (
+export const getCommands = () => (
   source: Observable<[ObservableSocketRead, ObservableSocketWrite]>
 ): Observable<Commands> =>
   new Observable(observer =>
@@ -30,15 +30,5 @@ export const getCommands = (
           )
         )
       )
-      .subscribe({
-        next(commands: Commands) {
-          observer.next(commands);
-        },
-        error(err) {
-          observer.error(err);
-        },
-        complete() {
-          observer.complete();
-        }
-      })
+      .subscribe(observer)
   );

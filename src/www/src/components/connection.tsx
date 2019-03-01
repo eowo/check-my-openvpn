@@ -30,9 +30,9 @@ const DisconnectButton = styled(Button)`
 `;
 
 enum Status {
-  Disconnected,
-  Connected,
-  Connecting
+  Disconnected = 1,
+  Connected = 2,
+  Connecting = 4
 }
 
 interface Props {}
@@ -40,6 +40,7 @@ interface State {
   status: Status;
   host: string;
   port: number;
+  error: string;
 }
 
 export class ConnectionForm extends React.Component<Props, State> {
@@ -47,7 +48,8 @@ export class ConnectionForm extends React.Component<Props, State> {
   static defaultState: State = {
     status: Status.Disconnected,
     host: "10.8.0.1",
-    port: 5555
+    port: 5555,
+    error: ""
   };
 
   private openVPN: OpenVPN;
@@ -73,8 +75,9 @@ export class ConnectionForm extends React.Component<Props, State> {
       next: commands => {
         commandsSource.next(commands);
       },
-      error: e => this.setState({ status: Status.Disconnected }),
-      complete: () => this.setState({ status: Status.Connected })
+      error: ({ message }: Error) =>
+        this.setState({ error: message, status: Status.Disconnected }),
+      complete: () => this.setState({ error: "", status: Status.Connected })
     });
   }
 
@@ -93,7 +96,7 @@ export class ConnectionForm extends React.Component<Props, State> {
           <Input
             type="text"
             value={this.state.host}
-            onChange={this.handleHostChange}
+            onChange={e => this.handleHostChange(e)}
           />
         </label>
         <label>
@@ -101,18 +104,18 @@ export class ConnectionForm extends React.Component<Props, State> {
           <Input
             type="number"
             value={this.state.port}
-            onChange={this.handlePortChange}
+            onChange={e => this.handlePortChange(e)}
           />
         </label>
         <ConnectButton
           onClick={() => this.connect()}
-          disabled={status === Status.Connected || status === Status.Connecting}
+          disabled={!!(status & (Status.Connected | Status.Connecting))}
         >
           Connect
         </ConnectButton>
         <DisconnectButton
           onClick={() => this.disconnect()}
-          disabled={status === Status.Disconnected}
+          disabled={!!(status & (Status.Disconnected | Status.Connecting))}
         >
           Disconnect
         </DisconnectButton>
