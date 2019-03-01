@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`openVpn should be able to connect and emit commands 1`] = `
+Object {
+  "log": Observable {
+    "_isScalar": false,
+    "_subscribe": [Function],
+  },
+  "logEnable": [Function],
+  "pid": Observable {
+    "_isScalar": false,
+    "_subscribe": [Function],
+  },
+  "status": Observable {
+    "_isScalar": false,
+    "_subscribe": [Function],
+  },
+}
+`;
+
+exports[`openVpn should have connect and destroy properties 1`] = `
+Object {
+  "connect": [Function],
+  "disconnect": [Function],
+}
+`;

@@ -1,6 +1,6 @@
-import { Observable, Subject } from "rxjs";
+import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import converge from "ramda/es/converge";
+import { converge } from "ramda";
 import { logEnable, status, pid } from "./commands";
 import { log } from "./real-time-messages";
 import { ObservableSocketWrite, ObservableSocketRead } from "./get-rx-socket";
