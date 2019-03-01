@@ -18,7 +18,7 @@ jobs:
       install:
         - yarn
       before_script:
-        - source .dev-envs.sh
+        - source .dev-env.sh
         - yarn audit
         - yarn audit --cwd src/www
       script:
