@@ -1,6 +1,6 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  coverageDirectory: "../../coverage/",
+  coverageDirectory: "./coverage/",
   collectCoverage: true
 };
