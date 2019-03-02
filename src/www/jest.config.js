@@ -1,5 +1,6 @@
 module.exports = {
-  coverageReporters: ["text"],
   preset: "ts-jest",
-  testEnvironment: "node"
+  testEnvironment: "node",
+  coverageDirectory: "../../coverage/",
+  collectCoverage: true
 };

@@ -17,6 +17,7 @@ jobs:
         - export PATH="$HOME/.yarn/bin:$PATH"
       install:
         - yarn install
+        - yarn global add codecov
       before_script:
         - source .dev-env.sh
         - yarn audit
@@ -24,3 +25,4 @@ jobs:
       script:
         - yarn lint
         - yarn test
+        - codecov
