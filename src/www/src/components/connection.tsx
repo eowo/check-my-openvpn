@@ -1,8 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
 import { openVpn, OpenVPN } from "../openvpn";
-import { Loading } from "./loading";
 import CommandsContext from "./commands-context";
+import { Loading } from "./loading";
 
 const Input = styled.input`
   color: black;
@@ -44,8 +44,8 @@ interface State {
 }
 
 export class ConnectionForm extends React.Component<Props, State> {
-  static contextType = CommandsContext;
-  static defaultState: State = {
+  public static contextType = CommandsContext;
+  public static defaultState: State = {
     status: Status.Disconnected,
     host: "10.8.0.1",
     port: 5555,
@@ -60,19 +60,19 @@ export class ConnectionForm extends React.Component<Props, State> {
     this.openVPN = openVpn();
   }
 
-  handleHostChange(event: React.ChangeEvent<HTMLInputElement>) {
+  public handleHostChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ host: event.target.value });
   }
 
-  handlePortChange(event: React.ChangeEvent<HTMLInputElement>) {
+  public handlePortChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ port: parseInt(event.target.value) });
   }
 
-  connect() {
+  public connect() {
     const { commandsSource } = this.context;
     this.setState({ status: Status.Connecting });
     this.openVPN.connect(this.state.host, this.state.port).subscribe({
-      next: commands => {
+      next: (commands) => {
         commandsSource.next(commands);
       },
       error: ({ message }: Error) =>
@@ -81,12 +81,12 @@ export class ConnectionForm extends React.Component<Props, State> {
     });
   }
 
-  disconnect() {
+  public disconnect() {
     this.openVPN.disconnect();
     this.setState(ConnectionForm.defaultState);
   }
 
-  render() {
+  public render() {
     const { status } = this.state;
 
     return (
@@ -96,7 +96,7 @@ export class ConnectionForm extends React.Component<Props, State> {
           <Input
             type="text"
             value={this.state.host}
-            onChange={e => this.handleHostChange(e)}
+            onChange={(e) => this.handleHostChange(e)}
           />
         </label>
         <label>
@@ -104,7 +104,7 @@ export class ConnectionForm extends React.Component<Props, State> {
           <Input
             type="number"
             value={this.state.port}
-            onChange={e => this.handlePortChange(e)}
+            onChange={(e) => this.handlePortChange(e)}
           />
         </label>
         <ConnectButton

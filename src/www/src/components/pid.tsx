@@ -1,9 +1,9 @@
 import * as React from "react";
-import styled from "styled-components";
-import { mergeMap } from "rxjs/operators";
 import { Subscription } from "rxjs";
-import CommandsContext from "./commands-context";
+import { mergeMap } from "rxjs/operators";
+import styled from "styled-components";
 import { Commands } from "../openvpn";
+import CommandsContext from "./commands-context";
 
 const PidText = styled.div`
   color: blue;
@@ -16,7 +16,7 @@ interface PidState {
 }
 
 export class Pid extends React.Component<PidProps, PidState> {
-  static contextType = CommandsContext;
+  public static contextType = CommandsContext;
   private subscription: Subscription = undefined;
 
   constructor(props: PidProps) {
@@ -24,7 +24,7 @@ export class Pid extends React.Component<PidProps, PidState> {
     this.state = { pid: "" };
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     const { commandsSource } = this.context;
     this.subscription = commandsSource
       .pipe(mergeMap(({ pid }: Commands) => pid))
@@ -33,11 +33,11 @@ export class Pid extends React.Component<PidProps, PidState> {
       });
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     this.subscription.unsubscribe();
   }
 
-  render() {
+  public render() {
     return <PidText>{this.state.pid}</PidText>;
   }
 }

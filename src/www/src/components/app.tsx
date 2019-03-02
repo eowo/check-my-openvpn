@@ -1,15 +1,15 @@
 import * as React from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import { Pid } from "./pid";
-import { ConnectionForm } from "./connection";
-import { Status } from "./status";
-import { Log } from "./log";
 import { Commands } from "../openvpn";
+import { ConnectionForm } from "./connection";
+import { Log } from "./log";
+import { Pid } from "./pid";
+import { Status } from "./status";
 
 const GlobalStyle = createGlobalStyle`
   body {
     background-color: ${(props: { light: boolean }) =>
-      props.light ? "white" : "black"}; 
+      props.light ? "white" : "black"};
     color: ${(props: { light: boolean }) => (!props.light ? "white" : "black")};
     font-family: 'monospace';
     font-size: 1em;
@@ -31,11 +31,11 @@ export class App extends React.Component<Props, State> {
     this.setCommands.bind(this);
   }
 
-  setCommands(commands: Commands) {
+  public setCommands(commands: Commands) {
     this.setState({ commands });
   }
 
-  render() {
+  public render() {
     return (
       <React.Fragment>
         <GlobalStyle light />

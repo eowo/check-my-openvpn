@@ -1,7 +1,7 @@
 import * as React from "react";
-import styled from "styled-components";
 import { Subscription } from "rxjs";
 import { mergeMap } from "rxjs/operators";
+import styled from "styled-components";
 import { Commands } from "../openvpn";
 import CommandsContext from "./commands-context";
 
@@ -20,7 +20,7 @@ interface State {
 }
 
 export class Log extends React.Component<Props, State> {
-  static contextType = CommandsContext;
+  public static contextType = CommandsContext;
 
   private subscription: Subscription = undefined;
   constructor(props: Props) {
@@ -28,28 +28,28 @@ export class Log extends React.Component<Props, State> {
     this.state = { log: [] };
   }
 
-  enableLog() {
+  public enableLog() {
     const { commandsSource } = this.context;
     this.subscription = commandsSource
       .pipe(mergeMap(({ logEnable }: Commands) => logEnable(true)))
       .subscribe();
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     const { commandsSource } = this.context;
     this.subscription = commandsSource
       .pipe(mergeMap(({ log }: Commands) => log))
       .subscribe({
         next: (newLog: string) =>
-          this.setState(prevState => ({ log: [...prevState.log, newLog] }))
+          this.setState((prevState) => ({ log: [...prevState.log, newLog] }))
       });
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     this.subscription.unsubscribe();
   }
 
-  render() {
+  public render() {
     return (
       <React.Fragment>
         <EnableLog onClick={() => this.enableLog()}>Enable</EnableLog>

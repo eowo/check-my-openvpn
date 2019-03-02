@@ -1,7 +1,7 @@
 import * as React from "react";
-import styled from "styled-components";
-import { Subscription, Subject } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 import { scan, tap } from "rxjs/operators";
+import styled from "styled-components";
 
 const Spinner = styled.div`
   color: black;
@@ -14,8 +14,8 @@ interface State {
 }
 
 export class Loading extends React.Component<Props, State> {
-  static interval: number = 125;
-  static frames: string[] = ["💻●∙∙🖥", "💻∙●∙🖥", "💻∙∙●🖥", "💻∙●∙🖥", "💻●∙∙🖥"];
+  public static interval: number = 125;
+  public static frames: string[] = ["💻●∙∙🖥", "💻∙●∙🖥", "💻∙∙●🖥", "💻∙●∙🖥", "💻●∙∙🖥"];
   private frameSubject: Subject<number>;
   private subscription: Subscription;
 
@@ -26,15 +26,15 @@ export class Loading extends React.Component<Props, State> {
     this.subscribeToFrameChange();
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     setInterval(() => this.frameSubject.next(1), Loading.interval);
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     this.subscription.unsubscribe();
   }
 
-  subscribeToFrameChange() {
+  public subscribeToFrameChange() {
     this.subscription = this.frameSubject
       .pipe(
         scan(
@@ -42,12 +42,12 @@ export class Loading extends React.Component<Props, State> {
             (acc = acc === Loading.frames.length - 1 ? 0 : ++acc),
           0
         ),
-        tap(ix => this.setState({ frame: Loading.frames[ix] }))
+        tap((ix) => this.setState({ frame: Loading.frames[ix] }))
       )
       .subscribe();
   }
 
-  render() {
+  public render() {
     return <Spinner>{this.state.frame}</Spinner>;
   }
 }
