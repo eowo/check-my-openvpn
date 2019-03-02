@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`openVpn should be able to connect and emit commands 1`] = `
+exports[`openVpn connect() should be able to connect and emit commands 1`] = `
 Object {
   "log": Observable {
     "_isScalar": false,
