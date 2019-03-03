@@ -2,7 +2,6 @@ import { Socket } from "net";
 import {
   compose,
   concat,
-  converge,
   head,
   init,
   isEmpty,
@@ -11,23 +10,8 @@ import {
   tail,
   unnest
 } from "ramda";
-import {
-  bindNodeCallback,
-  from,
-  fromEvent,
-  Observable,
-  of,
-  Subject
-} from "rxjs";
-import {
-  catchError,
-  filter,
-  map,
-  mapTo,
-  mergeMap,
-  scan,
-  tap
-} from "rxjs/operators";
+import { from, fromEvent, Observable, Subject } from "rxjs";
+import { filter, map, mergeMap, scan, tap } from "rxjs/operators";
 
 const isCompletePackage = compose<ReadonlyArray<string>, any, boolean>(
   isEmpty,
@@ -42,7 +26,9 @@ const collectPackage = (acc: string[], cur: string[]) => {
 };
 
 export type ObservableSocketRead = Observable<string>;
-const createObservableSocketRead = (socket: Socket): ObservableSocketRead => {
+export const createObservableSocketRead = (
+  socket: Socket
+): ObservableSocketRead => {
   const observer = new Subject<string>();
   fromEvent(socket, "data")
     .pipe(
@@ -65,35 +51,3 @@ const createObservableSocketRead = (socket: Socket): ObservableSocketRead => {
 
   return observer.asObservable();
 };
-
-export type ObservableSocketWrite = (command: string) => Observable<boolean>;
-const createObservableSocketWrite = (socket: Socket): ObservableSocketWrite => (
-  command: string
-) => {
-  const socketWrite = (cmd: string, cb: () => void) =>
-    socket.write(cmd, "utf8", cb);
-  return new Observable<boolean>((observer) =>
-    of(socket)
-      .pipe(
-        filter(() => !socket.destroyed),
-        mergeMap(() => bindNodeCallback(socketWrite)(command)),
-        mapTo(true),
-        catchError((_) => of(false))
-      )
-      .subscribe(observer)
-  );
-};
-
-export const getRxSocket = () => (source: Observable<Socket>) =>
-  new Observable<[ObservableSocketRead, ObservableSocketWrite]>((observer) =>
-    source
-      .pipe(
-        map(
-          converge((read, write) => [read, write], [
-            createObservableSocketRead,
-            createObservableSocketWrite
-          ])
-        )
-      )
-      .subscribe(observer)
-  );

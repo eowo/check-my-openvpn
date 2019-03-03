@@ -13,7 +13,6 @@ export const logEnable: ([read, send]: [
     );
     send(`log ${on ? "on" : "off"}\r\n`)
       .pipe(
-        filter((sent: boolean) => sent),
         mergeMap(() =>
           read.pipe(
             filter(test(responseRegEx)),

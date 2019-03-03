@@ -17,7 +17,6 @@ export const status: ([read, send]: [
   new Observable((observer) => {
     send("status 2\r\n")
       .pipe(
-        filter((sent: boolean) => sent),
         mergeMap(() =>
           read.pipe(
             filter(
@@ -36,10 +35,10 @@ export const status: ([read, send]: [
               )
             ),
             take(1),
-            timeout(1000),
-            catchError((error: Error) =>
-              error instanceof TimeoutError ? of([]) : throwError(error)
-            )
+            timeout(2000),
+            catchError((error: Error) => {
+              return error instanceof TimeoutError ? of([]) : throwError(error);
+            })
           )
         )
       )

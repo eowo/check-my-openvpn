@@ -10,7 +10,6 @@ export const pid: ([read, send]: [
   new Observable((observer) => {
     send("pid\r\n")
       .pipe(
-        filter((sent: boolean) => sent),
         mergeMap(() =>
           read.pipe(
             filter(test(/^SUCCESS: pid=/)),
