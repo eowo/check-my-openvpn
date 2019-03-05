@@ -30,9 +30,10 @@ export const createObservableSocketRead = (
   socket: Socket
 ): ObservableSocketRead => {
   const observer = new Subject<string>();
+
   fromEvent(socket, "data")
     .pipe(
-      map((data: Uint8Array) => data.toString()),
+      map((data: Buffer) => data.toString()),
       // tslint:disable-next-line
       tap(console.log),
       map(split(/\n/)),
