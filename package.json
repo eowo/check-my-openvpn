@@ -17,7 +17,7 @@
     "clean:app": "rm -rf app && mkdir app",
     "dev": "yarn clean:app && yarn build:www --watch & yarn build:electron && yarn electron app/main.js",
     "build:www": "cd src/www && yarn build",
-    "build:electron": "yarn tsc -p ./src/electron/.tsconfig.json",
+    "build:electron": "yarn tsc -p ./src/electron/tsconfig.json",
     "lint": "tslint -c tslint.json \"src/**/*.ts\"",
     "format": "prettier \"src/**/*.ts\" --write && yarn lint --fix",
     "test": "yarn jest --coverage"
