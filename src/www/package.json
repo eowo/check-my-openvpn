@@ -1,10 +1,11 @@
 {
   "name": "check-my-openvpn-ui",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "scripts": {
     "cp:assets": "cp -r assets/* ../../app/",
-    "build": "yarn cp:assets & webpack --config webpack.config.dev.js"
+    "build:dev": "yarn cp:assets & webpack --config webpack.config.dev.js",
+    "build:prod": "yarn cp:assets & webpack --config webpack.config.prod.js"
   },
   "devDependencies": {
     "@types/d3": "^5.7.1",

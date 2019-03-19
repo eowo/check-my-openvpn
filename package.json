@@ -15,12 +15,16 @@
   "scripts": {
     "postinstall": "yarn install --cwd src/www",
     "clean:app": "rm -rf app && mkdir app",
-    "dev": "yarn clean:app && yarn build:www --watch & yarn build:electron && yarn electron app/main.js",
-    "build:www": "cd src/www && yarn build",
+    "dev": "yarn clean:app && yarn build:www:dev --watch & yarn build:electron && yarn electron app/main.js",
+    "build:www:dev": "cd src/www && yarn build:dev",
+    "build:www:prod": "cd src/www && yarn build:prod",
     "build:electron": "yarn tsc -p ./src/electron/tsconfig.json",
+    "set-version": "",
     "lint": "tslint -c tslint.json \"src/**/*.ts\"",
     "format": "prettier \"src/**/*.ts\" --write && yarn lint --fix",
-    "test": "yarn jest --coverage"
+    "test": "yarn jest --coverage",
+    "bundle:prod": "yarn clean:app && yarn build:www:prod && yarn build:electron",
+    "build:l": "yarn electron-builder --linux --x64 --ia32 --publish=never"
   },
   "build": {
     "appId": "com.eowo.check-my-openvpn",
