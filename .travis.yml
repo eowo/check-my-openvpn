@@ -15,7 +15,7 @@ jobs:
           - src/www/node_modules
       before_install:
         - nvm install
-        - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.13.0
+        - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.15.2
         - export PATH="$HOME/.yarn/bin:$PATH"
       install:
         - yarn install
@@ -41,7 +41,7 @@ jobs:
           - $HOME/.cache/electron-builder
       before_install:
         - nvm install
-        - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.13.0
+        - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.15.2
         - export PATH="$HOME/.yarn/bin:$PATH"
       install:
         - yarn install
@@ -58,7 +58,9 @@ jobs:
         file_glob: true
         file:
           - dist/*.deb
+          - dist/*.AppImage
         skip_cleanup: true
         overwrite: true
         on:
+          tags: true
           repo: eowo/check-my-openvpn
