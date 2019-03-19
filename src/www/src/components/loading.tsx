@@ -8,18 +8,23 @@ const Spinner = styled.div`
   display: inline-block;
 `;
 
-interface Props {}
 interface State {
   frame: string;
 }
 
-export class Loading extends React.Component<Props, State> {
+export class Loading extends React.Component<{}, State> {
   public static interval: number = 125;
-  public static frames: string[] = ["💻●∙∙🖥", "💻∙●∙🖥", "💻∙∙●🖥", "💻∙●∙🖥", "💻●∙∙🖥"];
+  public static frames: string[] = [
+    "💻●∙∙🖥",
+    "💻∙●∙🖥",
+    "💻∙∙●🖥",
+    "💻∙●∙🖥",
+    "💻●∙∙🖥"
+  ];
   private frameSubject: Subject<number>;
   private subscription: Subscription;
 
-  constructor(props: Props) {
+  constructor(props: {}) {
     super(props);
     this.state = { frame: "" };
     this.frameSubject = new Subject();
