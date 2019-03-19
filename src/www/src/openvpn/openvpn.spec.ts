@@ -76,12 +76,12 @@ describe("openVpn", () => {
   });
 
   describe("disconnect()", () => {
-    it("should call socket.end()", (done) => {
+    it("should call socket.destory()", (done) => {
       socket.addEventListener.mockImplementation(
         (event: string, listener: () => void) =>
           event === "connect" && listener()
       );
-      socket.end.mockImplementation(() => done());
+      socket.destroy.mockImplementation(() => done());
 
       const o = openVpn();
       o.connect("10.8.0.1", 5555).subscribe({ complete: () => o.disconnect() });

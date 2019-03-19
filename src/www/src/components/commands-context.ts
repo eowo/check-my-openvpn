@@ -2,7 +2,7 @@ import * as React from "react";
 import { ReplaySubject } from "rxjs";
 import { Commands } from "../openvpn";
 
-interface CommandsContext {
+export interface CommandsContext {
   commandsSource: ReplaySubject<Commands>;
 }
 

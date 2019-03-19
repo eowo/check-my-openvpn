@@ -1,4 +1,6 @@
 import * as React from "react";
+import { Subscription } from "rxjs";
+import { tap } from "rxjs/operators";
 import styled from "styled-components";
 import { openVpn, OpenVPN } from "../openvpn";
 import CommandsContext from "./commands-context";
@@ -35,7 +37,9 @@ enum Status {
   Connecting = 4
 }
 
-interface Props {}
+interface Props {
+  onConnected: (state: boolean) => void;
+}
 interface State {
   status: Status;
   host: string;
@@ -51,8 +55,9 @@ export class ConnectionForm extends React.Component<Props, State> {
     port: 5555,
     error: ""
   };
-
+  public context!: React.ContextType<typeof CommandsContext>;
   private openVPN: OpenVPN;
+  private eventsSubscription: Subscription = undefined;
 
   constructor(props: Props) {
     super(props);
@@ -60,30 +65,47 @@ export class ConnectionForm extends React.Component<Props, State> {
     this.openVPN = openVpn();
   }
 
+  public componentDidMount() {
+    this.eventsSubscription = this.openVPN.events.subscribe({
+      next: ({ closed }) => {
+        this.setState({
+          status: closed ? Status.Disconnected : Status.Connected
+        });
+        this.props.onConnected(!closed);
+      }
+    });
+  }
+
+  public componentWillUnmount() {
+    this.eventsSubscription.unsubscribe();
+  }
+
   public handleHostChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ host: event.target.value });
   }
 
   public handlePortChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ port: parseInt(event.target.value) });
+    this.setState({ port: parseInt(event.target.value, 10) });
   }
 
   public connect() {
     const { commandsSource } = this.context;
     this.setState({ status: Status.Connecting });
-    this.openVPN.connect(this.state.host, this.state.port).subscribe({
-      next: (commands) => {
-        commandsSource.next(commands);
-      },
-      error: ({ message }: Error) =>
-        this.setState({ error: message, status: Status.Disconnected }),
-      complete: () => this.setState({ error: "", status: Status.Connected })
-    });
+    this.openVPN
+      .connect(this.state.host, this.state.port)
+      .pipe(
+        tap((commands) => commandsSource.next(commands)),
+        tap(() => this.setState({ status: Status.Connected }))
+      )
+      .subscribe({
+        error: ({ message }: Error) =>
+          this.setState({ error: message, status: Status.Disconnected }),
+        complete: () => this.props.onConnected(true)
+      });
   }
 
   public disconnect() {
     this.openVPN.disconnect();
-    this.setState(ConnectionForm.defaultState);
   }
 
   public render() {
