@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "cp:index": "cp src/index.html ../../app/index.html",
-    "build": "yarn cp:index & webpack --config webpack.config.dev.js"
+    "cp:assets": "cp -r assets/* ../../app/",
+    "build": "yarn cp:assets & webpack --config webpack.config.dev.js"
   },
   "devDependencies": {
     "@types/d3": "^5.7.1",
