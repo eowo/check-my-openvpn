@@ -4,9 +4,10 @@ import { switchMap } from "rxjs/operators";
 import styled from "styled-components";
 import CommandsContext from "./commands-context";
 
-const PidText = styled.div`
-  color: blue;
-  border-color: blue;
+const Wrapper = styled.div`
+  background: #383838;
+  border: 1px solid #505050;
+  padding: 10px;
 `;
 
 interface State {
@@ -35,6 +36,6 @@ export class Pid extends React.Component<{}, State> {
   }
 
   public render() {
-    return <PidText>{this.state.pid}</PidText>;
+    return <Wrapper>OpenVPN process ID: {this.state.pid}</Wrapper>;
   }
 }

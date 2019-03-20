@@ -9,7 +9,12 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0px;
     margin: 0px;
     font-family: 'Roboto-Light';
-    font-size: 1.1em;
+    font-size: 1em;
+    color: whitesmoke;
+    background: #1e1e1e;
+    * > button, input, textarea {
+      font-size: 1em;
+    }
   }
 `;
 
@@ -19,21 +24,21 @@ export const Wrapper = styled.div`
   flex-direction: column;
   font-weight: bold;
   text-align: center;
-  & > * {
-    padding: 10px;
-  }
 `;
 
 export const Header = styled.div`
-  background: tomato;
+  height: auto;
+  background: #424242;
 `;
 
 export const Footer = styled.div`
-  background: lightgreen;
+  height: 5vh;
+  background: #424242;
 `;
 
 export const Main = styled.div`
   flex: auto;
-  text-align: left;
-  background: white;
+  & > * {
+    margin: 10px;
+  }
 `;

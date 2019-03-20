@@ -18,12 +18,11 @@ export class App extends React.Component<{}, State> {
     return (
       <Wrapper>
         <GlobalStyle />
-        <Header>
+        <Header>CheckMyOpenVPN</Header>
+        <Main>
           <ConnectionForm
             onConnected={(connected) => this.setState({ connected })}
           />
-        </Header>
-        <Main>
           {this.state.connected && (
             <React.Fragment>
               <Pid />

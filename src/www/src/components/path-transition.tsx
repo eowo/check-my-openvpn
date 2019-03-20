@@ -4,13 +4,13 @@ import styled from "styled-components";
 
 const Graph = styled.div`
   display: inline-block;
+  color: #9e9e9e;
   width: 100%;
-  height: 100px;
 
   .line {
     fill: none;
-    stroke: darkslategrey;
-    stroke-width: 1px;
+    stroke: gray;
+    stroke-width: 2px;
   }
   .area {
     fill: ${(props: { color: string }) => props.color};

@@ -1,21 +1,33 @@
 import * as React from "react";
-import styled from "styled-components";
+import { ClientInfo } from "./client-info";
+import { Graphs, Info, Wrapper } from "./client.style";
 import { PathTransitionGraph } from "./path-transition";
-
-const ClientBox = styled.div``;
 
 interface Props {
   info: string;
 }
 
 export const Client = ({ info }: Props) => {
-  const { cid, bytesIn, bytesOut } = parseClientInfo(info);
+  const client = parseClientInfo(info);
+
   return (
-    <ClientBox>
-      {info}
-      <PathTransitionGraph id={`${cid}-out`} bytes={bytesOut} color="red" />
-      <PathTransitionGraph id={`${cid}-in`} bytes={bytesIn} color="green" />
-    </ClientBox>
+    <Wrapper>
+      <Info>
+        <ClientInfo {...client} />
+      </Info>
+      <Graphs>
+        <PathTransitionGraph
+          id={`${client.clientId}-out`}
+          bytes={client.bytesSent}
+          color="red"
+        />
+        <PathTransitionGraph
+          id={`${client.clientId}-in`}
+          bytes={client.bytesReceived}
+          color="green"
+        />
+      </Graphs>
+    </Wrapper>
   );
 };
 
@@ -34,9 +46,18 @@ const parseClientInfo = (info: string) => {
     clientId,
     peerId
   ] = info.split(",");
-  const cid: number = parseInt(clientId, 10);
-  const bytesIn: number = parseInt(bytesReceived, 10);
-  const bytesOut: number = parseInt(bytesSent, 10);
 
-  return { cid, bytesIn, bytesOut };
+  return {
+    commonName,
+    realAddress,
+    virtualAddress,
+    virtualIPv6Address,
+    bytesReceived: parseInt(bytesReceived, 10),
+    bytesSent: parseInt(bytesSent, 10),
+    connectedSince,
+    connectedSinceTimeT,
+    username,
+    clientId,
+    peerId
+  };
 };

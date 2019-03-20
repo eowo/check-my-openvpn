@@ -1,35 +1,16 @@
 import * as React from "react";
 import { Subscription } from "rxjs";
 import { tap } from "rxjs/operators";
-import styled from "styled-components";
 import { openVpn, OpenVPN } from "../openvpn";
 import CommandsContext from "./commands-context";
+import {
+  ConnectButton,
+  DisconnectButton,
+  Input,
+  Label,
+  Wrapper
+} from "./connection.style";
 import { Loading } from "./loading";
-
-const Input = styled.input`
-  color: black;
-  font-size: 1em;
-  padding: 0.25em 1em;
-  border: 1px solid gray;
-`;
-
-const Button = styled.button`
-  color: white;
-  font-size: 1em;
-  margin: 0.1em;
-  padding: 0.25em 1em;
-  &:disabled {
-    background-color: gray;
-  }
-`;
-
-const ConnectButton = styled(Button)`
-  background-color: green;
-`;
-
-const DisconnectButton = styled(Button)`
-  background-color: red;
-`;
 
 enum Status {
   Disconnected = 1,
@@ -112,23 +93,23 @@ export class ConnectionForm extends React.Component<Props, State> {
     const { status } = this.state;
 
     return (
-      <React.Fragment>
-        <label>
+      <Wrapper>
+        <Label>
           Host:
           <Input
             type="text"
             value={this.state.host}
             onChange={(e) => this.handleHostChange(e)}
           />
-        </label>
-        <label>
+        </Label>
+        <Label>
           Port:
           <Input
             type="number"
             value={this.state.port}
             onChange={(e) => this.handlePortChange(e)}
           />
-        </label>
+        </Label>
         <ConnectButton
           onClick={() => this.connect()}
           disabled={!!(status & (Status.Connected | Status.Connecting))}
@@ -142,7 +123,7 @@ export class ConnectionForm extends React.Component<Props, State> {
           Disconnect
         </DisconnectButton>
         {status === Status.Connecting && <Loading />}
-      </React.Fragment>
+      </Wrapper>
     );
   }
 }

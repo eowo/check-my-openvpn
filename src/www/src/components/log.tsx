@@ -6,9 +6,7 @@ import { Commands } from "../openvpn";
 import CommandsContext from "./commands-context";
 
 const Wrapper = styled.div`
-  flex: 1;
-
-  background: red;
+  height: 20vh;
 `;
 
 const EnableLog = styled.button`
@@ -16,6 +14,8 @@ const EnableLog = styled.button`
 `;
 
 const Logs = styled.textarea`
+  background: #424242;
+  color: whitesmoke;
   box-sizing: border-box;
   font-size: 1em;
   width: 100%;
