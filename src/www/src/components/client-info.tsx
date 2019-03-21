@@ -7,18 +7,17 @@ const Wrapper = styled.dl`
   justify-content: space-around;
   height: 100%;
   margin: 0;
+  text-align: left;
 `;
 
 const P = styled.dt`
   width: 40%;
-  text-align: right;
-  font-weight: 600;
 `;
 const V = styled.dd`
   width: 55%;
   margin: 0;
-  text-align: left;
-  font-weight: 500;
+  color: #aaa;
+  font-weight: 400;
 `;
 
 interface Props {
@@ -50,28 +49,28 @@ export const ClientInfo = React.memo(
     peerId
   }: Props) => (
     <Wrapper>
-      <P>commonName:</P>
+      <P>Common Name:</P>
       <V>{commonName}</V>
-      <P>realAddress:</P>
+      <P>Real Address:</P>
       <V>{realAddress}</V>
-      <P>virtualAddress:</P>
+      <P>Virtual Address:</P>
       <V>{virtualAddress}</V>
-      <P>virtualIPv6Address:</P>
+      <P>Virtual IPv6 Address:</P>
       <V>{virtualIPv6Address}</V>
-      <P>bytesReceived:</P>
-      <V>{bytesReceived}</V>
-      <P>bytesSent:</P>
-      <V>{bytesSent}</V>
-      <P>connectedSince:</P>
+      <P>Received:</P>
+      <V>{bytesToMib(bytesReceived).toFixed(2)} MiB</V>
+      <P>Sent:</P>
+      <V>{bytesToMib(bytesSent).toFixed(2)} MiB</V>
+      <P>Connected since:</P>
       <V>{connectedSince}</V>
-      <P>connectedSinceTimeT:</P>
-      <V>{connectedSinceTimeT}</V>
-      <P>username:</P>
+      <P>Username:</P>
       <V>{username}</V>
-      <P>clientId:</P>
+      <P>Client Id:</P>
       <V>{clientId}</V>
-      <P>peerId:</P>
+      <P>Peer Id:</P>
       <V>{peerId}</V>
     </Wrapper>
   )
 );
+
+const bytesToMib = (b: number) => b / Math.pow(1024, 2);

@@ -39,9 +39,9 @@ export class PathTransitionGraph extends React.Component<Props> {
   private xAxis: any;
   private yAxis: any;
   private yAxisGroup: any;
-  private prevBytes: number;
+  private prevKiB: number;
   private now: number;
-  private lastBytes: number;
+  private lastKiB: number;
   private data: number[];
   private selector: string;
 
@@ -50,8 +50,8 @@ export class PathTransitionGraph extends React.Component<Props> {
     this.selector = `#graph-${this.props.id}`;
     this.now = new Date(Date.now() - duration).getTime();
     this.data = Array(100).fill(0);
-    this.prevBytes = 0;
-    this.lastBytes = 0;
+    this.prevKiB = 0;
+    this.lastKiB = 0;
   }
 
   public componentDidMount() {
@@ -60,11 +60,10 @@ export class PathTransitionGraph extends React.Component<Props> {
   }
 
   public shouldComponentUpdate({ bytes }: Props) {
-    bytes = bytes / 1024;
+    const KiB = bytes / 1024;
 
-    this.prevBytes = this.prevBytes === 0 ? bytes : this.prevBytes;
-    this.lastBytes = bytes - this.prevBytes;
-    this.prevBytes = bytes;
+    this.lastKiB = KiB - (this.prevKiB === 0 ? KiB : this.prevKiB);
+    this.prevKiB = KiB;
 
     return false;
   }
@@ -74,7 +73,7 @@ export class PathTransitionGraph extends React.Component<Props> {
   }
 
   private setup() {
-    const margin = { top: 10, right: 20, bottom: 10, left: 40 };
+    const margin = { top: 10, right: 10, bottom: 15, left: 40 };
 
     const svg = d3
       .select(this.selector)
@@ -167,7 +166,7 @@ export class PathTransitionGraph extends React.Component<Props> {
   private tick() {
     this.transition = this.transition
       .each(() => {
-        this.data.push(this.lastBytes);
+        this.data.push(this.lastKiB);
         this.now = new Date().getTime();
         this.yScale.domain([0, d3.max<number, number>(this.data, (d) => d + 10)]);
         this.yAxisGroup.transition().call(this.yAxis);

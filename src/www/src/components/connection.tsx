@@ -7,7 +7,6 @@ import {
   ConnectButton,
   DisconnectButton,
   Input,
-  Label,
   Wrapper
 } from "./connection.style";
 import { Loading } from "./loading";
@@ -94,34 +93,32 @@ export class ConnectionForm extends React.Component<Props, State> {
 
     return (
       <Wrapper>
-        <Label>
-          Host:
-          <Input
-            type="text"
-            value={this.state.host}
-            onChange={(e) => this.handleHostChange(e)}
-          />
-        </Label>
-        <Label>
-          Port:
-          <Input
-            type="number"
-            value={this.state.port}
-            onChange={(e) => this.handlePortChange(e)}
-          />
-        </Label>
-        <ConnectButton
-          onClick={() => this.connect()}
-          disabled={!!(status & (Status.Connected | Status.Connecting))}
-        >
-          Connect
-        </ConnectButton>
-        <DisconnectButton
-          onClick={() => this.disconnect()}
-          disabled={!!(status & (Status.Disconnected | Status.Connecting))}
-        >
-          Disconnect
-        </DisconnectButton>
+        {!(status & Status.Connected) && (
+          <React.Fragment>
+            <Input
+              required
+              placeholder="Host"
+              type="text"
+              value={this.state.host}
+              onChange={(e) => this.handleHostChange(e)}
+            />
+            <Input
+              required
+              placeholder="Port"
+              type="number"
+              value={this.state.port}
+              onChange={(e) => this.handlePortChange(e)}
+            />
+            <ConnectButton onClick={() => this.connect()}>
+              Connect
+            </ConnectButton>
+          </React.Fragment>
+        )}
+        {!!(status & Status.Connected) && (
+          <DisconnectButton onClick={() => this.disconnect()}>
+            Disconnect
+          </DisconnectButton>
+        )}
         {status === Status.Connecting && <Loading />}
       </Wrapper>
     );

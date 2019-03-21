@@ -2,17 +2,18 @@ import styled, { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
   @font-face {
-    font-family: "Roboto-Light";
-    src: url("font/Roboto-Light.ttf");
+    font-family: "Roboto-Regular";
+    src: url("font/Roboto-Regular.ttf");
   }
   body {
     padding: 0px;
     margin: 0px;
-    font-family: 'Roboto-Light';
+    font-family: 'Roboto-Regular';
     font-size: 1em;
     color: whitesmoke;
     background: #1e1e1e;
     * > button, input, textarea {
+      font-family: 'Roboto-Regular';
       font-size: 1em;
     }
   }
@@ -27,8 +28,8 @@ export const Wrapper = styled.div`
 `;
 
 export const Header = styled.div`
-  height: auto;
-  background: #424242;
+  height: 5vh;
+  background: #1a4148;
 `;
 
 export const Footer = styled.div`

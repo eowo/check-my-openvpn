@@ -2,7 +2,7 @@ import * as React from "react";
 import { Footer, GlobalStyle, Header, Main, Wrapper } from "./app.style";
 import { ConnectionForm } from "./connection";
 import { Log } from "./log";
-import { Pid } from "./pid";
+import { OpenVPN } from "./openvpn";
 import { Status } from "./status";
 
 interface State {
@@ -25,7 +25,7 @@ export class App extends React.Component<{}, State> {
           />
           {this.state.connected && (
             <React.Fragment>
-              <Pid />
+              <OpenVPN />
               <Status />
               <Log />
             </React.Fragment>

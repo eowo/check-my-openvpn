@@ -4,8 +4,10 @@ import { scan, tap } from "rxjs/operators";
 import styled from "styled-components";
 
 const Spinner = styled.div`
-  color: black;
+  color: whitesmoke;
   display: inline-block;
+  padding: 10px;
+  font-size: 1.2em;
 `;
 
 interface State {

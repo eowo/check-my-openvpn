@@ -17,7 +17,6 @@ const Logs = styled.textarea`
   background: #424242;
   color: whitesmoke;
   box-sizing: border-box;
-  font-size: 1em;
   width: 100%;
   height: 100%;
 `;

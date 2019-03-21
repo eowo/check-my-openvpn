@@ -1,28 +1,35 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Wrapper = styled.div`
   background: #383838;
   border: 1px solid #505050;
-  padding: 10px;
+  padding: 20px;
   display: inline-flex;
   flex-direction: column;
-  * > input,
+  font-size: 1.2em;
+  & > input,
   button {
+    outline: none;
     color: whitesmoke;
-    margin: 2px;
-    border: 1px solid #505050;
+    margin: 5px;
+    padding: 10px;
   }
 `;
 
-export const Label = styled.label`
-  align-self: flex-end;
-`;
-
 export const Input = styled.input`
-  background: #757575;
+  border: none;
+  background-color: transparent;
+  border-bottom: 1px solid #505050;
+
+  ::placeholder {
+    color: whitesmoke;
+    font-size: 1.2em;
+  }
 `;
 
 export const Button = styled.button`
+  border: 1px solid #505050;
+  border-radius: 3px;
   &:disabled {
     background-color: #525252;
     color: #a5a5a5;
