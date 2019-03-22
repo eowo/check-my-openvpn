@@ -1,4 +1,4 @@
-import { from, of, Subject } from "rxjs";
+import { of, Subject } from "rxjs";
 import { status } from "./status";
 
 jest.mock("../get-rx-socket");

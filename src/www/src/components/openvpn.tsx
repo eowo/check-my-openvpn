@@ -57,9 +57,9 @@ export class OpenVPN extends React.Component<{}, State> {
   public render() {
     return (
       <Wrapper>
-        <P>Process ID</P>
+        <P>Process ID:</P>
         <V>{this.state.pid}</V>
-        <P>Version</P>
+        <P>Version:</P>
         <V>{this.state.version}</V>
       </Wrapper>
     );

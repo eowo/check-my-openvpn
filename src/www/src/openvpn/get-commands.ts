@@ -1,7 +1,14 @@
 import { converge } from "ramda";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { bytecountRequest, logEnable, pid, status, version } from "./commands";
+import {
+  bytecountRequest,
+  loadStats,
+  logEnable,
+  pid,
+  status,
+  version
+} from "./commands";
 import { ObservableSocketRead, ObservableSocketWrite } from "./get-rx-socket";
 import { bytecount, log } from "./real-time-messages";
 
@@ -13,6 +20,7 @@ export interface Commands {
   pid: pid;
   status: status;
   version: version;
+  loadStats: loadStats;
 }
 
 export const getCommands = () => (
@@ -28,7 +36,8 @@ export const getCommands = () => (
           obsLog,
           obsBytecountRequest,
           obsBytecount,
-          obsVersion
+          obsVersion,
+          obsLoadStats
         ) => ({
           logEnable: obsLogEnable,
           pid: obsPid,
@@ -36,9 +45,19 @@ export const getCommands = () => (
           log: obsLog,
           bytecountRequest: obsBytecountRequest,
           bytecount: obsBytecount,
-          version: obsVersion
+          version: obsVersion,
+          loadStats: obsLoadStats
         }),
-        [logEnable, pid, status, log, bytecountRequest, bytecount, version]
+        [
+          logEnable,
+          pid,
+          status,
+          log,
+          bytecountRequest,
+          bytecount,
+          version,
+          loadStats
+        ]
       )
     )
   );
