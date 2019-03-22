@@ -67,5 +67,8 @@
     "typescript": "^3.3.3",
     "webpack": "^4.29.3",
     "webpack-cli": "^3.2.3"
+  },
+  "resolutions": {
+    "js-yaml": "3.13.0"
   }
 }
