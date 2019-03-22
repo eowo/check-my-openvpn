@@ -1,4 +1,4 @@
-import { of, Subject } from "rxjs";
+import { from, of, Subject } from "rxjs";
 import { status } from "./status";
 
 jest.mock("../get-rx-socket");
@@ -12,7 +12,7 @@ describe("status command", () => {
   });
 
   beforeEach(() => {
-    read = new Subject<string>();
+    read = new Subject<string[]>();
   });
 
   describe("send", () => {
@@ -27,6 +27,41 @@ describe("status command", () => {
       });
 
       read.complete();
+    });
+  });
+
+  describe("read", () => {
+    it("should collect the message properly", (done) => {
+      const MIXED_RESPONSE = [
+        "OTHER_CMD_RESPONSE: ...\r",
+        "END\r",
+        "TITLE,...\r",
+        "TIME,...\r",
+        "HEADER,...\r",
+        "CLIENT_LIST,...\r",
+        "HEADER,...\r",
+        "ROUTING_TABLE,...\r",
+        "GLOBAL_STATS,...\r",
+        "END\r"
+      ];
+
+      status([read, send]).subscribe({
+        next: (response) => {
+          expect(response).toEqual([
+            "TITLE,...\r",
+            "TIME,...\r",
+            "HEADER,...\r",
+            "CLIENT_LIST,...\r",
+            "HEADER,...\r",
+            "ROUTING_TABLE,...\r",
+            "GLOBAL_STATS,...\r",
+            "END\r"
+          ]);
+          done();
+        }
+      });
+
+      MIXED_RESPONSE.map((row) => read.next(row));
     });
   });
 });

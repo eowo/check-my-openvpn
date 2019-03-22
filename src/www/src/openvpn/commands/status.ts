@@ -1,4 +1,4 @@
-import { compose, concat, last, test } from "ramda";
+import { compose, concat, isEmpty, last, test } from "ramda";
 import { Observable } from "rxjs";
 import { filter, scan, switchMap, take } from "rxjs/operators";
 import { ObservableSocketRead, ObservableSocketWrite } from "../get-rx-socket";
@@ -16,7 +16,7 @@ export const status: ([read, send]: [
         ),
         scan((acc: string[], cur: string): string[] => {
           if (test(/^TITLE/, cur)) acc = [];
-          return concat(acc, [cur]);
+          return test(/END\r$/, cur) && isEmpty(acc) ? [] : concat(acc, [cur]);
         }, []),
         filter(
           compose<string[], string, boolean>(
