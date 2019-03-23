@@ -16,12 +16,12 @@ describe("status command", () => {
   });
 
   describe("send", () => {
-    it(`should send "status 2\\r\\n" command`, (done) => {
+    it(`should send "status 2" command`, (done) => {
       send = jest.fn().mockReturnValue(of(true));
 
       status([read, send]).subscribe({
         complete: () => {
-          expect(send).toHaveBeenCalledWith("status 2\r\n");
+          expect(send).toHaveBeenCalledWith("status 2");
           done();
         }
       });

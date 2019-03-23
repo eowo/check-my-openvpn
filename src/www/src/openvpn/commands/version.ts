@@ -8,7 +8,7 @@ export const version: ([read, send]: [
   ObservableSocketRead,
   ObservableSocketWrite
 ]) => version = ([read, send]) =>
-  send("version\r\n").pipe(
+  send("version").pipe(
     switchMap(() =>
       read.pipe(
         filter(test(/^OpenVPN Version|Management Version|END/)),

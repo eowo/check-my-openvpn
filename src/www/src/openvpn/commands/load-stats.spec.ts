@@ -16,12 +16,12 @@ describe("load-stats command", () => {
   });
 
   describe("send", () => {
-    it(`should send "load-stats\\r\\n" command`, (done) => {
+    it(`should send "load-stats" command`, (done) => {
       send = jest.fn().mockReturnValue(of(true));
 
       loadStats([read, send]).subscribe({
         complete: () => {
-          expect(send).toHaveBeenCalledWith("load-stats\r\n");
+          expect(send).toHaveBeenCalledWith("load-stats");
           done();
         }
       });

@@ -12,7 +12,7 @@ export const logEnable: ([read, send]: [
     const responseRegEx = new RegExp(
       `^SUCCESS: real-time log notification set to ${on ? "ON" : "OFF"}`
     );
-    send(`log ${on ? "on" : "off"}\r\n`)
+    send(`log ${on ? "on" : "off"}`)
       .pipe(
         switchMap(() =>
           read.pipe(

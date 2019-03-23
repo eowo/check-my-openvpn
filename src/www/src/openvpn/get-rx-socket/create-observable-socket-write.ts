@@ -11,7 +11,7 @@ export const createObservableSocketWrite = (
 ): ObservableSocketWrite => (command: string) =>
   of(socket).pipe(
     filter(({ destroyed }: Socket) => !destroyed),
-    mergeMap((s: Socket) => bindNodeCallback(socketWrite(s))(command)),
+    mergeMap((s: Socket) => bindNodeCallback(socketWrite(s))(command + "\r\n")),
     mapTo(true),
     catchError(() => of(false)),
     filter((sent: boolean) => sent),

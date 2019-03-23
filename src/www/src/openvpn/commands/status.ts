@@ -8,7 +8,7 @@ export const status: ([read, send]: [
   ObservableSocketRead,
   ObservableSocketWrite
 ]) => status = ([read, send]) =>
-  send("status 2\r\n").pipe(
+  send("status 2").pipe(
     switchMap(() =>
       read.pipe(
         filter(

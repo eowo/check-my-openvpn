@@ -8,7 +8,7 @@ export const pid: ([read, send]: [
   ObservableSocketRead,
   ObservableSocketWrite
 ]) => pid = ([read, send]) =>
-  send("pid\r\n").pipe(
+  send("pid").pipe(
     switchMap(() =>
       read.pipe(
         filter(test(/^SUCCESS: pid=/)),

@@ -8,7 +8,7 @@ export const bytecountRequest: ([read, send]: [
   ObservableSocketRead,
   ObservableSocketWrite
 ]) => bytecountRequest = ([read, send]) => (n: number) =>
-  send(`bytecount ${n}\r\n`).pipe(
+  send(`bytecount ${n}`).pipe(
     switchMap(() =>
       read.pipe(
         filter(test(/^SUCCESS: bytecount interval changed/)),

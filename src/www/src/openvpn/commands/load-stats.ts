@@ -18,7 +18,7 @@ export const loadStats: ([read, send]: [
   ObservableSocketRead,
   ObservableSocketWrite
 ]) => loadStats = ([read, send]) =>
-  send("load-stats\r\n").pipe(
+  send("load-stats").pipe(
     switchMap(() =>
       read.pipe(
         filter(test(/^SUCCESS: nclients=/)),

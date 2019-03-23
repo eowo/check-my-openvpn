@@ -7,6 +7,115 @@ Object {
     "_subscribe": [Function],
   },
   "bytecountRequest": [Function],
+  "loadStats": Observable {
+    "_isScalar": false,
+    "operator": SwitchMapOperator {
+      "project": [Function],
+    },
+    "source": Observable {
+      "_isScalar": false,
+      "operator": TimeoutWithOperator {
+        "absoluteTimeout": false,
+        "scheduler": AsyncScheduler {
+          "SchedulerAction": [Function],
+          "actions": Array [],
+          "active": false,
+          "now": [Function],
+          "scheduled": undefined,
+        },
+        "waitFor": 1000,
+        "withObservable": Observable {
+          "_isScalar": false,
+          "_subscribe": [Function],
+        },
+      },
+      "source": Observable {
+        "_isScalar": false,
+        "operator": FilterOperator {
+          "predicate": [Function],
+          "thisArg": undefined,
+        },
+        "source": Observable {
+          "_isScalar": false,
+          "operator": CatchOperator {
+            "caught": [Circular],
+            "selector": [Function],
+          },
+          "source": Observable {
+            "_isScalar": false,
+            "operator": MapToOperator {
+              "value": true,
+            },
+            "source": Observable {
+              "_isScalar": false,
+              "operator": MergeMapOperator {
+                "concurrent": Infinity,
+                "project": [Function],
+              },
+              "source": Observable {
+                "_isScalar": false,
+                "operator": FilterOperator {
+                  "predicate": [Function],
+                  "thisArg": undefined,
+                },
+                "source": Observable {
+                  "_isScalar": true,
+                  "_subscribe": [Function],
+                  "value": Object {
+                    "addEventListener": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          "connect",
+                          [Function],
+                          undefined,
+                        ],
+                        Array [
+                          "data",
+                          [Function],
+                          undefined,
+                        ],
+                        Array [
+                          "error",
+                          [Function],
+                          undefined,
+                        ],
+                        Array [
+                          "close",
+                          [Function],
+                          undefined,
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "incomplete",
+                          "value": undefined,
+                        },
+                        Object {
+                          "type": "return",
+                          "value": false,
+                        },
+                        Object {
+                          "type": "return",
+                          "value": false,
+                        },
+                        Object {
+                          "type": "return",
+                          "value": false,
+                        },
+                      ],
+                    },
+                    "destroy": [MockFunction],
+                    "end": [MockFunction],
+                    "removeEventListener": [MockFunction],
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   "log": Observable {
     "_isScalar": false,
     "_subscribe": [Function],

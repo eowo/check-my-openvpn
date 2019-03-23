@@ -52,6 +52,17 @@ describe("createObservableSocketWrite()", () => {
       complete: () => done()
     });
   });
+
+  it("should add CRLF to end of the command", (done) => {
+    socket.write.mockImplementation(
+      (cmd: string, enc: string, cb: (err: string, res: boolean) => void) => {
+        expect(cmd).toBe("command\r\n");
+        done();
+      }
+    );
+
+    createObservableSocketWrite(socket)("command").subscribe();
+  });
 });
 
 const mockSocket = () => ({

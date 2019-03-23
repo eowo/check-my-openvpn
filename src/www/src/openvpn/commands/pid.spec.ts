@@ -16,12 +16,12 @@ describe("pid command", () => {
   });
 
   describe("send", () => {
-    it(`should send "pid\\r\\n" command`, (done) => {
+    it(`should send "pid" command`, (done) => {
       send = jest.fn().mockReturnValue(of(true));
 
       pid([read, send]).subscribe({
         complete: () => {
-          expect(send).toHaveBeenCalledWith("pid\r\n");
+          expect(send).toHaveBeenCalledWith("pid");
           done();
         }
       });
