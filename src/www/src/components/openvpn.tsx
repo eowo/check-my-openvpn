@@ -17,10 +17,10 @@ const Wrapper = styled.dl`
 `;
 
 const P = styled.dt`
-  width: 10%;
+  width: 20%;
 `;
 const V = styled.dd`
-  width: 90%;
+  width: 80%;
   margin: 0;
   color: #aaa;
   font-weight: 400;
@@ -28,7 +28,7 @@ const V = styled.dd`
 
 interface State {
   pid: string;
-  version: string[];
+  version: { [key: string]: string };
 }
 
 export class OpenVPN extends React.Component<{}, State> {
@@ -38,16 +38,14 @@ export class OpenVPN extends React.Component<{}, State> {
 
   constructor(props: {}) {
     super(props);
-    this.state = { pid: "", version: [] };
+    this.state = { pid: "", version: {} };
   }
 
   public componentDidMount() {
     const { commandsSource } = this.context;
     this.subscription = commandsSource
       .pipe(switchMap(({ pid, version }) => forkJoin(pid, version)))
-      .subscribe(([pid, version]: [string, string[]]) =>
-        this.setState({ pid, version })
-      );
+      .subscribe(([pid, version]) => this.setState({ pid, version }));
   }
 
   public componentWillUnmount() {
@@ -59,8 +57,12 @@ export class OpenVPN extends React.Component<{}, State> {
       <Wrapper>
         <P>Process ID:</P>
         <V>{this.state.pid}</V>
-        <P>Version:</P>
-        <V>{this.state.version}</V>
+        {Object.entries(this.state.version).map(([key, value]) => (
+          <React.Fragment key={key}>
+            <P>{key}:</P>
+            <V>{value}</V>
+          </React.Fragment>
+        ))}
       </Wrapper>
     );
   }
