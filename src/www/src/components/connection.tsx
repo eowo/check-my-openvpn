@@ -92,7 +92,7 @@ export class ConnectionForm extends React.Component<Props, State> {
     const { status } = this.state;
 
     return (
-      <Wrapper>
+      <Wrapper connected={!!(status & Status.Connected)}>
         {!(status & Status.Connected) && (
           <React.Fragment>
             <Input

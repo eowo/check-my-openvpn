@@ -17,6 +17,7 @@ function createMainWindow() {
     }
   });
 
+  window.maximize();
   window.loadURL(
     formatUrl({
       pathname: path.join(__dirname + "/index.html"),
