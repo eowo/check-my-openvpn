@@ -1,12 +1,27 @@
-import { test } from "ramda";
+import { split, test } from "ramda";
 import { Observable } from "rxjs";
-import { filter } from "rxjs/operators";
+import { filter, map } from "rxjs/operators";
 import { ObservableSocketRead } from "../get-rx-socket";
 
-export type bytecount = Observable<string>;
+export type bytecount = Observable<{
+  cid: number;
+  bytesIn: number;
+  bytesOut: number;
+}>;
 export const bytecount: ([read]: [ObservableSocketRead]) => bytecount = ([
   read
 ]) =>
-  new Observable((observer) => {
-    read.pipe(filter(test(/^>BYTECOUNT_CLI:/))).subscribe(observer);
-  });
+  read.pipe(
+    filter(test(/^>BYTECOUNT_CLI:/)),
+    map(split(/:|,|\r/)),
+    map(([, cid, bytesIn, bytesOut]) => [
+      parseInt(cid, 10),
+      parseInt(bytesIn, 10),
+      parseInt(bytesOut, 10)
+    ]),
+    map(([cid, bytesIn, bytesOut]) => ({
+      cid,
+      bytesIn,
+      bytesOut
+    }))
+  );
