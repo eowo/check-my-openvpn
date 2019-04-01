@@ -28,8 +28,16 @@ export const Wrapper = styled.div`
 `;
 
 export const Header = styled.div`
-  height: 5vh;
+  height: 6vh;
   background: #1a4148;
+`;
+
+export const Logo = styled.div`
+  background-size: cover;
+  background-image: url(./logo.png);
+  width: 250px;
+  height: 100%;
+  background-position: center center;
 `;
 
 export const Footer = styled.div`

@@ -12,7 +12,7 @@ export const bytecountRequest: ([read, send]: [
     switchMap(() =>
       read.pipe(
         filter(test(/^SUCCESS: bytecount interval changed/)),
-        // timeout(2000),
+        timeout(2000),
         take(1),
         mapTo(true)
       )

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Footer, GlobalStyle, Header, Main, Wrapper } from "./app.style";
+import { Footer, GlobalStyle, Header, Logo, Main, Wrapper } from "./app.style";
 import { ConnectionForm } from "./connection";
 import { Log } from "./log";
 import { OpenVPN } from "./openvpn";
@@ -18,7 +18,9 @@ export class App extends React.Component<{}, State> {
     return (
       <Wrapper>
         <GlobalStyle />
-        <Header>CheckMyOpenVPN</Header>
+        <Header>
+          <Logo />
+        </Header>
         <Main>
           <ConnectionForm
             onConnected={(connected) => this.setState({ connected })}

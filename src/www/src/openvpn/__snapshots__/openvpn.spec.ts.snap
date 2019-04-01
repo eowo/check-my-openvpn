@@ -4,7 +4,42 @@ exports[`openVpn connect() should be able to connect and emit commands 1`] = `
 Object {
   "bytecount": Observable {
     "_isScalar": false,
-    "_subscribe": [Function],
+    "operator": MapOperator {
+      "project": [Function],
+      "thisArg": undefined,
+    },
+    "source": Observable {
+      "_isScalar": false,
+      "operator": MapOperator {
+        "project": [Function],
+        "thisArg": undefined,
+      },
+      "source": Observable {
+        "_isScalar": false,
+        "operator": MapOperator {
+          "project": [Function],
+          "thisArg": undefined,
+        },
+        "source": Observable {
+          "_isScalar": false,
+          "operator": FilterOperator {
+            "predicate": [Function],
+            "thisArg": undefined,
+          },
+          "source": Observable {
+            "_isScalar": false,
+            "source": Subject {
+              "_isScalar": false,
+              "closed": false,
+              "hasError": false,
+              "isStopped": false,
+              "observers": Array [],
+              "thrownError": null,
+            },
+          },
+        },
+      },
+    },
   },
   "bytecountRequest": [Function],
   "loadStats": Observable {
