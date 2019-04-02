@@ -28,7 +28,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Header = styled.div`
-  height: 6vh;
+  height: 65px;
   background: #1a4148;
 `;
 

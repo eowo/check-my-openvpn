@@ -9,6 +9,7 @@ export const Wrapper = styled.div`
   flex-basis: calc(50% - 5px);
   flex-direction: row;
   padding: 10px;
+  margin-bottom: 10px;
 `;
 
 export const Info = styled.div`
