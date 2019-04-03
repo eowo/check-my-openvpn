@@ -30,7 +30,7 @@ interface Props {
   connectedSince: string;
   connectedSinceTimeT: string;
   username: string;
-  clientId: string;
+  clientId: number;
   peerId: string;
 }
 

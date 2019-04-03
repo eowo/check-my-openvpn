@@ -9,7 +9,7 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0px;
     margin: 0px;
     font-family: 'Roboto-Regular';
-    font-size: 1em;
+    font-size: 0.8em;
     color: whitesmoke;
     background: #1e1e1e;
     * > button, input, textarea {
