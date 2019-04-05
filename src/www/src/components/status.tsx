@@ -1,6 +1,6 @@
 import { test } from "ramda";
 import * as React from "react";
-import { forkJoin, Subscription } from "rxjs";
+import { forkJoin, of, Subscription, timer } from "rxjs";
 import { switchMap } from "rxjs/operators";
 import styled from "styled-components";
 import { Client } from "./client";
@@ -31,10 +31,11 @@ export class Status extends React.Component<{}, State> {
     this.subscription = commandsSource
       .pipe(
         switchMap(({ status, bytecountRequest }) =>
-          forkJoin(status, bytecountRequest(1))
-        )
+          forkJoin(of(status), bytecountRequest(1))
+        ),
+        switchMap(([status]) => timer(0, 5000).pipe(switchMap(() => status)))
       )
-      .subscribe(([status]) => this.setState({ status }));
+      .subscribe((status) => this.setState({ status }));
   }
 
   public componentWillUnmount() {
