@@ -21,6 +21,7 @@ const Graph = styled.div`
   }
 `;
 
+const margin = { top: 10, right: 10, bottom: 15, left: 40 };
 const n = 100;
 const duration = 1000;
 
@@ -39,11 +40,14 @@ export class PathTransitionGraph extends React.Component<Props> {
   private xAxis: any;
   private yAxis: any;
   private yAxisGroup: any;
+  private clipPath: any;
   private prevKiB: number;
   private now: number;
   private lastKiB: number;
   private data: number[];
   private selector: string;
+  private width: number;
+  private height: number;
 
   constructor(props: Props) {
     super(props);
@@ -52,11 +56,19 @@ export class PathTransitionGraph extends React.Component<Props> {
     this.data = Array(100).fill(0);
     this.prevKiB = 0;
     this.lastKiB = 0;
+
+    this.setDimension = this.setDimension.bind(this);
   }
 
   public componentDidMount() {
     this.setup();
     this.tick();
+
+    window.addEventListener("resize", this.setDimension);
+  }
+
+  public componentWillUnmount() {
+    window.removeEventListener("resize", this.setDimension);
   }
 
   public shouldComponentUpdate({ bytes }: Props) {
@@ -72,33 +84,38 @@ export class PathTransitionGraph extends React.Component<Props> {
     return <Graph id={this.selector.substring(1)} color={this.props.color} />;
   }
 
-  private setup() {
-    const margin = { top: 10, right: 10, bottom: 15, left: 40 };
+  private setDimension() {
+    ({ width: this.width, height: this.height } = getElementSize(
+      this.selector
+    ));
 
+    this.width = this.width - margin.left - margin.right;
+    this.height = this.height - margin.top - margin.bottom;
+  }
+
+  private setup() {
     const svg = d3
       .select(this.selector)
       .append("svg")
       .attr("width", "100%")
       .attr("height", "100%");
 
-    let { width, height } = getElementSize(this.selector);
-    width = width - margin.left - margin.right;
-    height = height - margin.top - margin.bottom;
+    this.setDimension();
 
     this.xScale = d3
       .scaleTime()
       .domain([this.now - (n - 2) * duration, this.now - duration])
-      .range([0, width]);
+      .range([0, this.width]);
 
     this.yScale = d3
       .scaleLinear()
-      .range([height, 0])
-      .domain([0, d3.max<number, number>(this.data, (d) => d + 10)]);
+      .domain([0, d3.max<number, number>(this.data, (d) => d + 10)])
+      .range([this.height, 0]);
 
     this.area = d3
       .area<number>()
       .x((d, i) => this.xScale(this.now - (n - 1 - i) * duration))
-      .y0(height)
+      .y0(this.height)
       .y1((d) => this.yScale(d))
       .curve(d3.curveBasis);
 
@@ -112,23 +129,23 @@ export class PathTransitionGraph extends React.Component<Props> {
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    svg
+    this.clipPath = svg
       .append("defs")
       .append("clipPath")
       .attr("id", "clip")
       .append("rect")
-      .attr("width", width)
-      .attr("height", height);
+      .attr("width", this.width)
+      .attr("height", this.height);
 
     this.xAxis = d3
       .axisBottom(this.xScale)
       .ticks(15)
-      .tickSize(-height);
+      .tickSize(-this.height);
     this.yAxis = d3.axisLeft(this.yScale).ticks(5);
 
     g.append("g")
       .attr("class", "axis-x")
-      .attr("transform", "translate(0," + height + ")")
+      .attr("transform", "translate(0," + this.height + ")")
       .call(this.xAxis);
 
     this.yAxisGroup = g
@@ -168,13 +185,17 @@ export class PathTransitionGraph extends React.Component<Props> {
       .each(() => {
         this.data.push(this.lastKiB);
         this.now = new Date().getTime();
-        this.yScale.domain([0, d3.max<number, number>(this.data, (d) => d + 10)]);
-        this.yAxisGroup.transition().call(this.yAxis);
 
-        this.xScale.domain([
-          this.now - (n - 2) * duration,
-          this.now - duration
-        ]);
+        this.yScale
+          .domain([0, d3.max<number, number>(this.data, (d) => d + 10)])
+          .range([this.height, 0]);
+        this.xScale
+          .domain([this.now - (n - 2) * duration, this.now - duration])
+          .range([0, this.width]);
+
+        this.clipPath.attr("width", this.width).attr("height", this.height);
+
+        this.yAxisGroup.transition().call(this.yAxis);
 
         d3.select(`${this.selector} .line`)
           .attr("d", this.line)
