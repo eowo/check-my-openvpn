@@ -1,3 +1,4 @@
+import { equals } from "ramda";
 import * as React from "react";
 import { Subscription } from "rxjs";
 import { filter, switchMap } from "rxjs/operators";
@@ -19,9 +20,11 @@ interface ClientData {
   clientId: number;
   peerId: string;
 }
+
 interface Props {
   info: string;
 }
+
 interface State {
   bytesSent: number;
   bytesReceived: number;
@@ -53,6 +56,18 @@ export class Client extends React.Component<Props, State> {
 
   public componentWillUnmount() {
     this.subscription.unsubscribe();
+  }
+
+  public shouldComponentUpdate(nextProps: Props, nextState: State) {
+    if (!equals(this.props, nextProps)) {
+      this.clientData = parseClientInfo(nextProps.info);
+    }
+
+    if (!equals(this.state, nextState)) {
+      return true;
+    }
+
+    return false;
   }
 
   public render() {

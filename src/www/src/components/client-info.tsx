@@ -12,6 +12,7 @@ const Wrapper = styled.dl`
 const P = styled.dt`
   width: 40%;
 `;
+
 const V = styled.dd`
   width: 55%;
   margin: 0;
