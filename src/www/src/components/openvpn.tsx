@@ -10,17 +10,18 @@ const Wrapper = styled.dl`
   box-sizing: border-box;
   flex: 1;
   padding: 10px;
-
   display: flex;
   flex-wrap: wrap;
   text-align: left;
+  line-height: 1.8em;
 `;
 
 const P = styled.dt`
-  width: 20%;
+  width: 10%;
 `;
+
 const V = styled.dd`
-  width: 80%;
+  width: 90%;
   margin: 0;
   color: #aaa;
   font-weight: 400;

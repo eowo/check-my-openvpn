@@ -3,7 +3,6 @@ import * as React from "react";
 import styled from "styled-components";
 
 const Graph = styled.div`
-  display: inline-block;
   color: #9e9e9e;
   width: 100%;
 

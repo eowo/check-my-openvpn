@@ -4,10 +4,9 @@ import styled from "styled-components";
 const Wrapper = styled.dl`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-  height: 100%;
   margin: 0;
   text-align: left;
+  line-height: 1.8em;
 `;
 
 const P = styled.dt`
