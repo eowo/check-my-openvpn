@@ -10,6 +10,7 @@ export const Wrapper = styled.div`
   flex-direction: row;
   padding: 10px;
   margin-bottom: 10px;
+  max-height: fit-content;
 `;
 
 export const Info = styled.div`
