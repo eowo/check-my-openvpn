@@ -5,17 +5,34 @@ export const GlobalStyle = createGlobalStyle`
     font-family: "Roboto-Regular";
     src: url("font/Roboto-Regular.ttf");
   }
+
   body {
     padding: 0px;
     margin: 0px;
     font-family: 'Roboto-Regular';
-    font-size: 1em;
+    font-size: 0.8em;
     color: whitesmoke;
     background: #1e1e1e;
     * > button, input, textarea {
       font-family: 'Roboto-Regular';
       font-size: 1em;
     }
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
   }
 `;
 
