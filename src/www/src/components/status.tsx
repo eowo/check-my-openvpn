@@ -10,6 +10,9 @@ const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  height: 60vh;
 `;
 
 interface State {

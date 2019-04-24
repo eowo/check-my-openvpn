@@ -1,27 +1,12 @@
 import * as React from "react";
 import { Subscription } from "rxjs";
 import { switchMap, tap } from "rxjs/operators";
-import styled from "styled-components";
 import { Commands } from "../openvpn";
 import CommandsContext from "./commands-context";
-
-const Wrapper = styled.div`
-  height: 20vh;
-`;
-
-const EnableLog = styled.button`
-  color: black;
-`;
-
-const Logs = styled.textarea`
-  background: #424242;
-  color: whitesmoke;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-`;
+import { Logs, LogSwitch, Title, Wrapper } from "./log.style";
 
 interface State {
+  enabled: boolean;
   log: string[];
 }
 
@@ -33,11 +18,13 @@ export class Log extends React.Component<{}, State> {
 
   constructor(props: {}) {
     super(props);
-    this.state = { log: [] };
+    this.state = { enabled: false, log: [] };
   }
 
-  public enableLog() {
-    this.logEnable(true).subscribe();
+  public enableLog(on: boolean) {
+    this.logEnable(on).subscribe({
+      complete: () => this.setState({ enabled: on })
+    });
   }
 
   public componentDidMount() {
@@ -59,13 +46,14 @@ export class Log extends React.Component<{}, State> {
   public render() {
     return (
       <Wrapper>
-        <EnableLog onClick={() => this.enableLog()}>Enable</EnableLog>
-        <Logs
-          rows={2}
-          cols={2}
-          value={this.state.log.join("\n")}
-          readOnly={true}
-        />
+        <Title>Real-time output of log messages:</Title>
+        <LogSwitch
+          onClick={() => this.enableLog(!this.state.enabled)}
+          enabled={this.state.enabled}
+        >
+          {!this.state.enabled ? "▶ Enable" : "◼ Disable"}
+        </LogSwitch>
+        <Logs rows={10} value={this.state.log.join("\n")} readOnly={true} />
       </Wrapper>
     );
   }
