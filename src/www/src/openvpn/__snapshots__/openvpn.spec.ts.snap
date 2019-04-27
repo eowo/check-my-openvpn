@@ -153,7 +153,28 @@ Object {
   },
   "log": Observable {
     "_isScalar": false,
-    "_subscribe": [Function],
+    "operator": CatchOperator {
+      "caught": [Circular],
+      "selector": [Function],
+    },
+    "source": Observable {
+      "_isScalar": false,
+      "operator": FilterOperator {
+        "predicate": [Function],
+        "thisArg": undefined,
+      },
+      "source": Observable {
+        "_isScalar": false,
+        "source": Subject {
+          "_isScalar": false,
+          "closed": false,
+          "hasError": false,
+          "isStopped": false,
+          "observers": Array [],
+          "thrownError": null,
+        },
+      },
+    },
   },
   "logEnable": [Function],
   "pid": Observable {

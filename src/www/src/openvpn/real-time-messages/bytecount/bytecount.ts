@@ -1,7 +1,7 @@
 import { split, test } from "ramda";
 import { Observable } from "rxjs";
 import { filter, map } from "rxjs/operators";
-import { ObservableSocketRead } from "../get-rx-socket";
+import { ObservableSocketRead } from "../../get-rx-socket";
 
 export type bytecount = Observable<{
   cid: number;

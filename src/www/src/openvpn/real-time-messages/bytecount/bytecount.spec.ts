@@ -1,7 +1,7 @@
 import { Subject } from "rxjs";
 import { bytecount } from "./bytecount";
 
-jest.mock("../get-rx-socket");
+jest.mock("../../get-rx-socket");
 
 describe("Real-time notification: bytecount", () => {
   let read: any;
