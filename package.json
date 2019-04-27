@@ -24,7 +24,8 @@
     "format": "prettier \"src/**/*.ts\" --write && yarn lint --fix",
     "test": "yarn jest --coverage",
     "bundle:prod": "yarn clean:app && yarn build:www:prod && yarn build:electron",
-    "build:l": "yarn electron-builder --linux --x64 --ia32 --publish=never"
+    "build:l": "yarn electron-builder --linux --x64 --ia32 --publish=never",
+    "build:w": "yarn electron-builder --windows --publish=never"
   },
   "build": {
     "appId": "com.eowo.check-my-openvpn",
