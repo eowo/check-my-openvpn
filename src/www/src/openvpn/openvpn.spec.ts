@@ -1,5 +1,6 @@
 import { createConnection } from "net";
 import { TimeoutError } from "rxjs";
+import { AnonymousSubject } from "rxjs/internal/Subject";
 import { openVpn } from "./openvpn";
 
 jest.mock("net");
@@ -17,7 +18,11 @@ describe("openVpn", () => {
   });
 
   it("should have connect and destroy properties", () => {
-    expect(openVpn()).toMatchSnapshot();
+    expect(openVpn()).toMatchSnapshot({
+      connect: expect.any(Function),
+      disconnect: expect.any(Function),
+      events: expect.any(AnonymousSubject)
+    });
   });
 
   describe("connect()", () => {

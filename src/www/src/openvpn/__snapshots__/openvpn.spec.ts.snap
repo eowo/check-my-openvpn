@@ -94,55 +94,8 @@ Object {
                   "thisArg": undefined,
                 },
                 "source": Observable {
-                  "_isScalar": true,
+                  "_isScalar": false,
                   "_subscribe": [Function],
-                  "value": Object {
-                    "addEventListener": [MockFunction] {
-                      "calls": Array [
-                        Array [
-                          "connect",
-                          [Function],
-                          undefined,
-                        ],
-                        Array [
-                          "data",
-                          [Function],
-                          undefined,
-                        ],
-                        Array [
-                          "error",
-                          [Function],
-                          undefined,
-                        ],
-                        Array [
-                          "close",
-                          [Function],
-                          undefined,
-                        ],
-                      ],
-                      "results": Array [
-                        Object {
-                          "type": "incomplete",
-                          "value": undefined,
-                        },
-                        Object {
-                          "type": "return",
-                          "value": false,
-                        },
-                        Object {
-                          "type": "return",
-                          "value": false,
-                        },
-                        Object {
-                          "type": "return",
-                          "value": false,
-                        },
-                      ],
-                    },
-                    "destroy": [MockFunction],
-                    "end": [MockFunction],
-                    "removeEventListener": [MockFunction],
-                  },
                 },
               },
             },
@@ -229,55 +182,8 @@ Object {
                   "thisArg": undefined,
                 },
                 "source": Observable {
-                  "_isScalar": true,
+                  "_isScalar": false,
                   "_subscribe": [Function],
-                  "value": Object {
-                    "addEventListener": [MockFunction] {
-                      "calls": Array [
-                        Array [
-                          "connect",
-                          [Function],
-                          undefined,
-                        ],
-                        Array [
-                          "data",
-                          [Function],
-                          undefined,
-                        ],
-                        Array [
-                          "error",
-                          [Function],
-                          undefined,
-                        ],
-                        Array [
-                          "close",
-                          [Function],
-                          undefined,
-                        ],
-                      ],
-                      "results": Array [
-                        Object {
-                          "type": "incomplete",
-                          "value": undefined,
-                        },
-                        Object {
-                          "type": "return",
-                          "value": false,
-                        },
-                        Object {
-                          "type": "return",
-                          "value": false,
-                        },
-                        Object {
-                          "type": "return",
-                          "value": false,
-                        },
-                      ],
-                    },
-                    "destroy": [MockFunction],
-                    "end": [MockFunction],
-                    "removeEventListener": [MockFunction],
-                  },
                 },
               },
             },
@@ -338,55 +244,8 @@ Object {
                   "thisArg": undefined,
                 },
                 "source": Observable {
-                  "_isScalar": true,
+                  "_isScalar": false,
                   "_subscribe": [Function],
-                  "value": Object {
-                    "addEventListener": [MockFunction] {
-                      "calls": Array [
-                        Array [
-                          "connect",
-                          [Function],
-                          undefined,
-                        ],
-                        Array [
-                          "data",
-                          [Function],
-                          undefined,
-                        ],
-                        Array [
-                          "error",
-                          [Function],
-                          undefined,
-                        ],
-                        Array [
-                          "close",
-                          [Function],
-                          undefined,
-                        ],
-                      ],
-                      "results": Array [
-                        Object {
-                          "type": "incomplete",
-                          "value": undefined,
-                        },
-                        Object {
-                          "type": "return",
-                          "value": false,
-                        },
-                        Object {
-                          "type": "return",
-                          "value": false,
-                        },
-                        Object {
-                          "type": "return",
-                          "value": false,
-                        },
-                      ],
-                    },
-                    "destroy": [MockFunction],
-                    "end": [MockFunction],
-                    "removeEventListener": [MockFunction],
-                  },
                 },
               },
             },
@@ -447,55 +306,8 @@ Object {
                   "thisArg": undefined,
                 },
                 "source": Observable {
-                  "_isScalar": true,
+                  "_isScalar": false,
                   "_subscribe": [Function],
-                  "value": Object {
-                    "addEventListener": [MockFunction] {
-                      "calls": Array [
-                        Array [
-                          "connect",
-                          [Function],
-                          undefined,
-                        ],
-                        Array [
-                          "data",
-                          [Function],
-                          undefined,
-                        ],
-                        Array [
-                          "error",
-                          [Function],
-                          undefined,
-                        ],
-                        Array [
-                          "close",
-                          [Function],
-                          undefined,
-                        ],
-                      ],
-                      "results": Array [
-                        Object {
-                          "type": "incomplete",
-                          "value": undefined,
-                        },
-                        Object {
-                          "type": "return",
-                          "value": false,
-                        },
-                        Object {
-                          "type": "return",
-                          "value": false,
-                        },
-                        Object {
-                          "type": "return",
-                          "value": false,
-                        },
-                      ],
-                    },
-                    "destroy": [MockFunction],
-                    "end": [MockFunction],
-                    "removeEventListener": [MockFunction],
-                  },
                 },
               },
             },
@@ -509,46 +321,8 @@ Object {
 
 exports[`openVpn should have connect and destroy properties 1`] = `
 Object {
-  "connect": [Function],
-  "disconnect": [Function],
-  "events": AnonymousSubject {
-    "_isScalar": false,
-    "closed": false,
-    "destination": ReplaySubject {
-      "_bufferSize": 1,
-      "_events": Array [],
-      "_infiniteTimeWindow": true,
-      "_isScalar": false,
-      "_windowTime": Infinity,
-      "closed": false,
-      "hasError": false,
-      "isStopped": false,
-      "next": [Function],
-      "observers": Array [],
-      "scheduler": undefined,
-      "thrownError": null,
-    },
-    "hasError": false,
-    "isStopped": false,
-    "observers": Array [],
-    "operator": SwitchMapOperator {
-      "project": [Function],
-    },
-    "source": ReplaySubject {
-      "_bufferSize": 1,
-      "_events": Array [],
-      "_infiniteTimeWindow": true,
-      "_isScalar": false,
-      "_windowTime": Infinity,
-      "closed": false,
-      "hasError": false,
-      "isStopped": false,
-      "next": [Function],
-      "observers": Array [],
-      "scheduler": undefined,
-      "thrownError": null,
-    },
-    "thrownError": null,
-  },
+  "connect": Any<Function>,
+  "disconnect": Any<Function>,
+  "events": Any<AnonymousSubject>,
 }
 `;
