@@ -1,7 +1,10 @@
 import { compose, concat, isEmpty, last, match, reduce, test } from "ramda";
 import { Observable } from "rxjs";
 import { filter, map, scan, switchMap, take } from "rxjs/operators";
-import { ObservableSocketRead, ObservableSocketWrite } from "../get-rx-socket";
+import {
+  ObservableSocketRead,
+  ObservableSocketWrite
+} from "../../get-rx-socket";
 
 export type version = Observable<{}>;
 export const version: ([read, send]: [

@@ -1,7 +1,7 @@
 import { of, Subject } from "rxjs";
 import { status } from "./status";
 
-jest.mock("../get-rx-socket");
+jest.mock("../../get-rx-socket");
 
 describe("status command", () => {
   let read: any;

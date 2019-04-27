@@ -11,7 +11,10 @@ import {
 } from "ramda";
 import { Observable } from "rxjs";
 import { filter, map, switchMap, take } from "rxjs/operators";
-import { ObservableSocketRead, ObservableSocketWrite } from "../get-rx-socket";
+import {
+  ObservableSocketRead,
+  ObservableSocketWrite
+} from "../../get-rx-socket";
 
 export type loadStats = Observable<{ [key: string]: any }>;
 export const loadStats: ([read, send]: [

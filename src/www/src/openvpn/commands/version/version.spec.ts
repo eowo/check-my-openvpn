@@ -1,7 +1,7 @@
 import { of, Subject } from "rxjs";
 import { version } from "./version";
 
-jest.mock("../get-rx-socket");
+jest.mock("../../get-rx-socket");
 
 describe("version command", () => {
   let read: any;

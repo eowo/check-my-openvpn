@@ -1,9 +1,9 @@
 import { of, Subject } from "rxjs";
-import { pid } from "./pid";
+import { loadStats } from "./load-stats";
 
-jest.mock("../get-rx-socket");
+jest.mock("../../get-rx-socket");
 
-describe("pid command", () => {
+describe("load-stats command", () => {
   let read: any;
   let send: any;
 
@@ -16,12 +16,12 @@ describe("pid command", () => {
   });
 
   describe("send", () => {
-    it(`should send "pid" command`, (done) => {
+    it(`should send "load-stats" command`, (done) => {
       send = jest.fn().mockReturnValue(of(true));
 
-      pid([read, send]).subscribe({
+      loadStats([read, send]).subscribe({
         complete: () => {
-          expect(send).toHaveBeenCalledWith("pid");
+          expect(send).toHaveBeenCalledWith("load-stats");
           done();
         }
       });
@@ -32,11 +32,17 @@ describe("pid command", () => {
 
   describe("read", () => {
     it("should collect the message properly", (done) => {
-      const RESPONSE = ["SUCCESS: pid=2545\r"];
+      const RESPONSE = [
+        "SUCCESS: nclients=2,bytesin=2837800859,bytesout=28453141396\r"
+      ];
 
-      pid([read, send]).subscribe({
+      loadStats([read, send]).subscribe({
         next: (response) => {
-          expect(response).toEqual("2545");
+          expect(response).toEqual({
+            bytesin: "2837800859",
+            bytesout: "28453141396",
+            nclients: "2"
+          });
           done();
         }
       });
