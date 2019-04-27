@@ -1,4 +1,4 @@
-app/
-dist/
-node_modules/
-coverage/
+/app/*
+/dist/*
+/coverage/*
+node_modules
