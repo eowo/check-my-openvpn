@@ -1,15 +1,15 @@
 import * as React from "react";
 import { Subscription } from "rxjs";
 import { tap } from "rxjs/operators";
-import { openVpn, OpenVPN } from "../openvpn";
-import CommandsContext from "./commands-context";
+import { openVpn, OpenVPN } from "../../openvpn";
+import CommandsContext from "../commands-context";
+import { Loading } from "../loading";
 import {
   ConnectButton,
   DisconnectButton,
   Input,
   Wrapper
 } from "./connection.style";
-import { Loading } from "./loading";
 
 enum Status {
   Disconnected = 1,

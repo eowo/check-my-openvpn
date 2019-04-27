@@ -1,9 +1,9 @@
 import * as React from "react";
+import { ConnectionForm } from "../connection";
+import { Log } from "../log";
+import { OpenVPN } from "../openvpn";
+import { Status } from "../status";
 import { Footer, GlobalStyle, Header, Logo, Main, Wrapper } from "./app.style";
-import { ConnectionForm } from "./connection";
-import { Log } from "./log";
-import { OpenVPN } from "./openvpn";
-import { Status } from "./status";
 
 interface State {
   connected: boolean;

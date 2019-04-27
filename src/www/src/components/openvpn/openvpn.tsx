@@ -2,7 +2,7 @@ import * as React from "react";
 import { forkJoin, Subscription } from "rxjs";
 import { switchMap } from "rxjs/operators";
 import styled from "styled-components";
-import CommandsContext from "./commands-context";
+import CommandsContext from "../commands-context";
 
 const Wrapper = styled.dl`
   background: rgba(51, 51, 51, 0.75);

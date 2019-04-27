@@ -3,8 +3,8 @@ import * as React from "react";
 import { forkJoin, of, Subscription, timer } from "rxjs";
 import { switchMap } from "rxjs/operators";
 import styled from "styled-components";
-import { Client } from "./client";
-import CommandsContext from "./commands-context";
+import { Client } from "../client";
+import CommandsContext from "../commands-context";
 
 const Wrapper = styled.div`
   display: flex;

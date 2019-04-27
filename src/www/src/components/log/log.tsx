@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Subscription } from "rxjs";
 import { switchMap, tap } from "rxjs/operators";
-import { Commands } from "../openvpn";
-import CommandsContext from "./commands-context";
+import { Commands } from "../../openvpn";
+import CommandsContext from "../commands-context";
 import { Logs, LogSwitch, Title, Wrapper } from "./log.style";
 
 interface State {

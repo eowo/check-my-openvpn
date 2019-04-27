@@ -9,6 +9,10 @@
 
 CheckMyOpenVPN is a cross platform desktop application to remotely control your OpenVPN daemon.
 
+## Download
+
+- [Releases](https://github.com/eowo/check-my-openvpn/releases)
+
 ## Usage
 
 - You should enable the management interface in the OpenVPN configuration file:

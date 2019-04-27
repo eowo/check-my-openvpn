@@ -2,10 +2,10 @@ import { equals } from "ramda";
 import * as React from "react";
 import { Subscription } from "rxjs";
 import { filter, switchMap } from "rxjs/operators";
+import CommandsContext from "../commands-context";
+import { PathTransitionGraph } from "../path-transition";
 import { ClientInfo } from "./client-info";
 import { Graphs, Info, Wrapper } from "./client.style";
-import CommandsContext from "./commands-context";
-import { PathTransitionGraph } from "./path-transition";
 
 interface ClientData {
   commonName: string;
