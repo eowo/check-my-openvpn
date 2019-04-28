@@ -49,8 +49,7 @@
         "Categories": "GTK;GNOME;Utility;"
       },
       "target": [
-        "deb",
-        "AppImage"
+        "deb"
       ]
     }
   },
