@@ -3,6 +3,7 @@ import { ConnectionForm } from "../connection";
 import { Log } from "../log";
 import { OpenVPN } from "../openvpn";
 import { Status } from "../status";
+import { Version } from "../version";
 import { Footer, GlobalStyle, Header, Logo, Main, Wrapper } from "./app.style";
 
 interface State {
@@ -33,7 +34,9 @@ export class App extends React.Component<{}, State> {
             </React.Fragment>
           )}
         </Main>
-        <Footer />
+        <Footer>
+          <Version />
+        </Footer>
       </Wrapper>
     );
   }
