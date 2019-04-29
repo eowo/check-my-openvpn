@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Subscription } from "rxjs";
-import { switchMap, tap } from "rxjs/operators";
+import { map, switchMap, tap } from "rxjs/operators";
 import { Commands } from "../../openvpn";
 import CommandsContext from "../commands-context";
 import { Logs, LogSwitch, Title, Wrapper } from "./log.style";
@@ -32,7 +32,8 @@ export class Log extends React.Component<{}, State> {
     this.subscription = commandsSource
       .pipe(
         tap(({ logEnable }) => (this.logEnable = logEnable)),
-        switchMap(({ log }) => log)
+        switchMap(({ log }) => log),
+        map(({ time, flag, message }) => `${time}: [${flag}] ${message}`)
       )
       .subscribe((newLog: string) =>
         this.setState((prevState) => ({ log: [newLog, ...prevState.log] }))

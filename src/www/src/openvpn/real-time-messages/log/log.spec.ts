@@ -17,12 +17,16 @@ describe("Real-time notification: log", () => {
   it("should collect the message properly", (done) => {
     log([read]).subscribe({
       next: (response) => {
-        expect(response).toBe(">LOG: message\r");
+        expect(response).toEqual({
+          time: "2019-04-29T20:28:44.000Z",
+          flag: "I",
+          message: "x:y"
+        });
         done();
       }
     });
 
-    read.next(">LOG: message\r");
+    read.next(">LOG:1556569724,I,x:y\r");
   });
 
   it("should catch the error", (done) => {
