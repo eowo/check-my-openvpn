@@ -45,7 +45,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Header = styled.div`
-  height: 65px;
+  height: 5vh;
   background: #1a4148;
 `;
 
@@ -60,11 +60,11 @@ export const Logo = styled.div`
 export const Footer = styled.div`
   height: 5vh;
   background: #424242;
+  margin-top: auto;
 `;
 
 export const Main = styled.div`
-  flex: auto;
-  & > * {
-    margin: 10px;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
 `;

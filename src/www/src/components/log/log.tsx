@@ -3,11 +3,13 @@ import { Subscription } from "rxjs";
 import { map, switchMap, tap } from "rxjs/operators";
 import { Commands } from "../../openvpn";
 import CommandsContext from "../commands-context";
-import { Logs, LogSwitch, Title, Wrapper } from "./log.style";
+import { Maximize } from "../maximize";
+import { Content, Header, Logs, LogSwitch, Title, Wrapper } from "./log.style";
 
 interface State {
   enabled: boolean;
   log: string[];
+  isMaximized: boolean;
 }
 
 export class Log extends React.Component<{}, State> {
@@ -18,7 +20,7 @@ export class Log extends React.Component<{}, State> {
 
   constructor(props: {}) {
     super(props);
-    this.state = { enabled: false, log: [] };
+    this.state = { enabled: false, log: [], isMaximized: false };
   }
 
   public enableLog(on: boolean) {
@@ -46,15 +48,22 @@ export class Log extends React.Component<{}, State> {
 
   public render() {
     return (
-      <Wrapper>
-        <Title>Real-time output of log messages:</Title>
-        <LogSwitch
-          onClick={() => this.enableLog(!this.state.enabled)}
-          enabled={this.state.enabled}
-        >
-          {!this.state.enabled ? "▶ Enable" : "◼ Disable"}
-        </LogSwitch>
-        <Logs rows={10} value={this.state.log.join("\n")} readOnly={true} />
+      <Wrapper maximize={this.state.isMaximized}>
+        <Header>
+          <Title>Real-time output of log messages:</Title>
+          <LogSwitch
+            onClick={() => this.enableLog(!this.state.enabled)}
+            enabled={this.state.enabled}
+          >
+            {!this.state.enabled ? "▶ Enable" : "◼ Disable"}
+          </LogSwitch>
+          <Maximize
+            onChange={(maximize) => this.setState({ isMaximized: maximize })}
+          />
+        </Header>
+        <Content>
+          <Logs rows={1} value={this.state.log.join("\n")} readOnly={true} />
+        </Content>
       </Wrapper>
     );
   }

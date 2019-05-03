@@ -1,16 +1,33 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const Wrapper = styled.div`
+const cssMaximize = css`
+  position: absolute;
+  width: 100vw;
+  height: 90vh;
+`;
+
+export const Wrapper = styled.div<{ maximize?: boolean }>`
   flex: 1;
-  text-align: start;
-  border: 1px solid #505050;
-  padding: 5px;
-  background: rgba(51, 51, 51, 0.75);
+  flex-direction: column;
+  border-top: 1px solid #505050;
+  background: rgba(51, 51, 51, 1);
+  margin-top: auto;
+  ${(props) => (props.maximize ? cssMaximize : "")};
+`;
+
+export const Header = styled.div`
+  display: flex;
+  align-items: center;
+  height: 25px;
+`;
+
+export const Content = styled.div`
+  display: flex;
+  height: calc(100% - 25px);
 `;
 
 export const Title = styled.p`
-  display: inline-flex;
-  margin: 0px 10px 10px 0px;
+  margin: 6px;
 `;
 
 export const LogSwitch = styled.button<{ enabled: boolean }>`
@@ -20,7 +37,6 @@ export const LogSwitch = styled.button<{ enabled: boolean }>`
 `;
 
 export const Logs = styled.textarea`
-  display: flex;
   color: whitesmoke;
   background: rgb(33, 33, 33);
   box-sizing: border-box;

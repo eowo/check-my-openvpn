@@ -4,8 +4,11 @@ export const Wrapper = styled.div<{ connected: boolean }>`
   background: #383838;
   border: 1px solid #505050;
   padding: 20px;
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
+  margin-top: auto;
+  margin-bottom: auto;
+  align-self: center;
   font-size: 1.2em;
   & > input,
   button {
@@ -57,5 +60,4 @@ export const ConnectButton = styled(Button)`
 
 export const DisconnectButton = styled(Button)`
   background-color: #b30000;
-  padding: 5px;
 `;

@@ -7,12 +7,14 @@ import { Client } from "../client";
 import CommandsContext from "../commands-context";
 
 const Wrapper = styled.div`
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  flex: 1 1 auto;
   overflow-y: auto;
-  height: 60vh;
+  min-height: 60vh;
+  max-height: 60vh;
+  margin: 5px;
 `;
 
 interface State {

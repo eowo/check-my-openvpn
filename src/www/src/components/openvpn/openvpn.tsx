@@ -1,31 +1,8 @@
 import * as React from "react";
 import { forkJoin, Subscription } from "rxjs";
 import { switchMap } from "rxjs/operators";
-import styled from "styled-components";
 import CommandsContext from "../commands-context";
-
-const Wrapper = styled.dl`
-  background: rgba(51, 51, 51, 0.75);
-  border: 1px solid #505050;
-  box-sizing: border-box;
-  flex: 1;
-  padding: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  text-align: left;
-  line-height: 1.8em;
-`;
-
-const P = styled.dt`
-  width: 10%;
-`;
-
-const V = styled.dd`
-  width: 90%;
-  margin: 0;
-  color: #aaa;
-  font-weight: 400;
-`;
+import { P, V, Wrapper } from "./openvpn.style";
 
 interface State {
   pid: string;
