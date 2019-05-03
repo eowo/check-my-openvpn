@@ -1,4 +1,4 @@
-import { split, test } from "ramda";
+import { init, split, test } from "ramda";
 import { EMPTY, Observable } from "rxjs";
 import { catchError, filter, map } from "rxjs/operators";
 import { ObservableSocketRead } from "../../get-rx-socket";
@@ -14,10 +14,10 @@ export const log: ([read]: [ObservableSocketRead]) => log = ([read]) =>
   read.pipe(
     filter(test(/^>LOG:/)),
     map(split(/>LOG:|,|\r/)),
-    map(([, time, flag, message]) => ({
+    map(([, time, flag, ...message]) => ({
       time: new Date(parseInt(time, 10) * 1000).toISOString(),
       flag,
-      message
+      message: init(message).toString()
     })),
     catchError((error: Error) => EMPTY)
   );

@@ -20,13 +20,13 @@ describe("Real-time notification: log", () => {
         expect(response).toEqual({
           time: "2019-04-29T20:28:44.000Z",
           flag: "I",
-          message: "x:y"
+          message: "x:y,z"
         });
         done();
       }
     });
 
-    read.next(">LOG:1556569724,I,x:y\r");
+    read.next(">LOG:1556569724,I,x:y,z\r");
   });
 
   it("should catch the error", (done) => {
