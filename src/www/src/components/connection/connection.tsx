@@ -1,20 +1,23 @@
 import * as React from "react";
-import { Subscription } from "rxjs";
-import { tap } from "rxjs/operators";
+import { race, Subscription } from "rxjs";
+import { mergeMap, switchMap, take, takeWhile, tap } from "rxjs/operators";
 import { openVpn, OpenVPN } from "../../openvpn";
+import { STATES } from "../../openvpn/real-time-messages";
 import CommandsContext from "../commands-context";
 import { Loading } from "../loading";
 import {
   ConnectButton,
   DisconnectButton,
   Input,
+  LoginButton,
   Wrapper
 } from "./connection.style";
 
 enum Status {
   Disconnected = 1,
   Connected = 2,
-  Connecting = 4
+  Connecting = 3,
+  PasswordRequired = 4
 }
 
 interface Props {
@@ -25,7 +28,12 @@ interface State {
   host: string;
   port: number;
   error: string;
+  password: string;
+  loginBtnShake: boolean;
 }
+
+const isConnected = (value: any) =>
+  value === STATES.SUCCESS || /^INFO:/.test(value);
 
 export class ConnectionForm extends React.Component<Props, State> {
   public static contextType = CommandsContext;
@@ -33,7 +41,9 @@ export class ConnectionForm extends React.Component<Props, State> {
     status: Status.Disconnected,
     host: "10.8.0.1",
     port: 5555,
-    error: ""
+    error: "",
+    password: "",
+    loginBtnShake: false
   };
   public context!: React.ContextType<typeof CommandsContext>;
   private openVPN: OpenVPN;
@@ -60,12 +70,33 @@ export class ConnectionForm extends React.Component<Props, State> {
     this.eventsSubscription.unsubscribe();
   }
 
-  public handleHostChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ host: event.target.value });
+  public handleHostChange({
+    target: { value: host }
+  }: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ host });
   }
 
-  public handlePortChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ port: parseInt(event.target.value, 10) });
+  public handlePortChange({
+    target: { value: port }
+  }: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ port: parseInt(port, 10) });
+  }
+
+  public handlePasswordChange({
+    target: { value: password }
+  }: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ password });
+  }
+
+  public login() {
+    const { commandsSource } = this.context;
+    commandsSource
+      .pipe(
+        take(1),
+        tap(() => this.setState({ loginBtnShake: false })),
+        mergeMap(({ sendMsg }) => sendMsg(this.state.password))
+      )
+      .subscribe();
   }
 
   public connect() {
@@ -75,12 +106,27 @@ export class ConnectionForm extends React.Component<Props, State> {
       .connect(this.state.host, this.state.port)
       .pipe(
         tap((commands) => commandsSource.next(commands)),
-        tap(() => this.setState({ status: Status.Connected }))
+        switchMap(({ managementPassword, info }) =>
+          race([managementPassword, info]).pipe(
+            takeWhile((res: STATES | string) => !isConnected(res), true),
+            tap((state: STATES | string) => {
+              if (state === STATES.REQUEST) {
+                this.setState({
+                  password: "",
+                  loginBtnShake: true,
+                  status: Status.PasswordRequired
+                });
+              } else {
+                this.setState({ status: Status.Connected });
+                this.props.onConnected(true);
+              }
+            })
+          )
+        )
       )
       .subscribe({
         error: ({ message }: Error) =>
-          this.setState({ error: message, status: Status.Disconnected }),
-        complete: () => this.props.onConnected(true)
+          this.setState({ error: message, status: Status.Disconnected })
       });
   }
 
@@ -93,7 +139,7 @@ export class ConnectionForm extends React.Component<Props, State> {
 
     return (
       <Wrapper connected={!!(status & Status.Connected)}>
-        {!(status & Status.Connected) && (
+        {status === Status.Disconnected && (
           <React.Fragment>
             <Input
               required
@@ -114,7 +160,28 @@ export class ConnectionForm extends React.Component<Props, State> {
             </ConnectButton>
           </React.Fragment>
         )}
-        {!!(status & Status.Connected) && (
+        {status === Status.PasswordRequired && (
+          <React.Fragment>
+            <Input
+              autoFocus
+              required
+              placeholder="Password"
+              type="password"
+              value={this.state.password}
+              onChange={(e) => this.handlePasswordChange(e)}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") this.login();
+              }}
+            />
+            <LoginButton
+              animation={this.state.loginBtnShake}
+              onClick={() => this.login()}
+            >
+              Login
+            </LoginButton>
+          </React.Fragment>
+        )}
+        {status === Status.Connected && (
           <DisconnectButton onClick={() => this.disconnect()}>
             Disconnect
           </DisconnectButton>

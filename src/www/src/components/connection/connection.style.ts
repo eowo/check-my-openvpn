@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 export const Wrapper = styled.div<{ connected: boolean }>`
   background: #383838;
@@ -40,7 +40,7 @@ export const Input = styled.input`
   border-bottom: 1px solid #505050;
 
   ::placeholder {
-    color: whitesmoke;
+    color: gray;
     font-size: 1.2em;
   }
 `;
@@ -60,4 +60,31 @@ export const ConnectButton = styled(Button)`
 
 export const DisconnectButton = styled(Button)`
   background-color: #b30000;
+`;
+
+const shake = keyframes`
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+`;
+
+export const LoginButton = styled(Button)<{ animation: boolean }>`
+  background-color: #007b00;
+  ${(props) =>
+    props.animation &&
+    css`
+      animation: ${shake} 1s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    `}
 `;
