@@ -74,6 +74,23 @@ describe("createObservableSocketRead()", () => {
 
     packages.map((p) => listeners.data(p));
   });
+
+  it("should emit message if it is a PASSWORD request", (done) => {
+    const packages: Buffer[] = [Buffer.from("ENTER PASSWORD:")];
+    const res: string[] = [];
+
+    createObservableSocketRead(socket)
+      .pipe(take(1))
+      .subscribe({
+        next: (data: string) => res.push(data),
+        complete: () => {
+          expect(res).toEqual(["ENTER PASSWORD:"]);
+          done();
+        }
+      });
+
+    packages.map((p) => listeners.data(p));
+  });
 });
 
 const mockSocket = (listeners: {

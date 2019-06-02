@@ -1,8 +1,10 @@
 import { Socket } from "net";
 import {
+  anyPass,
   compose,
   concat,
   head,
+  includes,
   init,
   isEmpty,
   last,
@@ -13,8 +15,10 @@ import {
 import { from, fromEvent, Observable, Subject } from "rxjs";
 import { filter, map, mergeMap, scan, tap } from "rxjs/operators";
 
+const isInputRequest = (msg: string) => includes(msg, ["ENTER PASSWORD:"]);
+
 const isCompletePackage = compose<ReadonlyArray<string>, any, boolean>(
-  isEmpty,
+  anyPass([isEmpty, isInputRequest]),
   last
 );
 
@@ -24,6 +28,9 @@ const collectPackage = (acc: string[], cur: string[]) => {
     ? unnest([init(acc), [concat(last(acc), head(cur))], tail(cur)])
     : concat(acc, cur);
 };
+
+const removeEmptyItem = (packages: string[]) =>
+  packages.length > 1 ? init(packages) : packages;
 
 export type ObservableSocketRead = Observable<string>;
 export const createObservableSocketRead = (
@@ -39,7 +46,7 @@ export const createObservableSocketRead = (
       map(split(/\n/)),
       scan(collectPackage, []),
       filter(isCompletePackage),
-      map((packages: string[]) => init(packages)),
+      map(removeEmptyItem),
       mergeMap((packages: string[]) => from(packages))
     )
     .subscribe((msg: string) => observer.next(msg));
