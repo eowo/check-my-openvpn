@@ -135,24 +135,24 @@ export class ConnectionForm extends React.Component<Props, State> {
   }
 
   public render() {
-    const { status } = this.state;
+    const { status, host, port, password, loginBtnShake } = this.state;
 
     return (
-      <Wrapper connected={!!(status & Status.Connected)}>
+      <Wrapper connected={status === Status.Connected}>
         {status === Status.Disconnected && (
           <React.Fragment>
             <Input
               required
               placeholder="Host"
               type="text"
-              value={this.state.host}
+              value={host}
               onChange={(e) => this.handleHostChange(e)}
             />
             <Input
               required
               placeholder="Port"
               type="number"
-              value={this.state.port}
+              value={port}
               onChange={(e) => this.handlePortChange(e)}
             />
             <ConnectButton onClick={() => this.connect()}>
@@ -167,16 +167,13 @@ export class ConnectionForm extends React.Component<Props, State> {
               required
               placeholder="Password"
               type="password"
-              value={this.state.password}
+              value={password}
               onChange={(e) => this.handlePasswordChange(e)}
               onKeyPress={(e) => {
                 if (e.key === "Enter") this.login();
               }}
             />
-            <LoginButton
-              animation={this.state.loginBtnShake}
-              onClick={() => this.login()}
-            >
+            <LoginButton animation={loginBtnShake} onClick={() => this.login()}>
               Login
             </LoginButton>
           </React.Fragment>
