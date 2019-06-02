@@ -6,21 +6,25 @@ import {
   loadStats,
   logEnable,
   pid,
+  sendMsg,
   status,
   version
 } from "./commands";
 import { ObservableSocketRead, ObservableSocketWrite } from "./get-rx-socket";
-import { bytecount, log } from "./real-time-messages";
+import { bytecount, info, log, managementPassword } from "./real-time-messages";
 
 export interface Commands {
   logEnable: logEnable;
   bytecountRequest: bytecountRequest;
   bytecount: bytecount;
   log: log;
+  info: info;
   pid: pid;
   status: status;
   version: version;
   loadStats: loadStats;
+  managementPassword: managementPassword;
+  sendMsg: sendMsg;
 }
 
 export const getCommands = () => (
@@ -37,7 +41,10 @@ export const getCommands = () => (
           obsBytecountRequest,
           obsBytecount,
           obsVersion,
-          obsLoadStats
+          obsLoadStats,
+          obsManagementPassword,
+          obsInfo,
+          obsSendMsg
         ) => ({
           logEnable: obsLogEnable,
           pid: obsPid,
@@ -46,7 +53,10 @@ export const getCommands = () => (
           bytecountRequest: obsBytecountRequest,
           bytecount: obsBytecount,
           version: obsVersion,
-          loadStats: obsLoadStats
+          loadStats: obsLoadStats,
+          managementPassword: obsManagementPassword,
+          info: obsInfo,
+          sendMsg: obsSendMsg
         }),
         [
           logEnable,
@@ -56,7 +66,10 @@ export const getCommands = () => (
           bytecountRequest,
           bytecount,
           version,
-          loadStats
+          loadStats,
+          managementPassword,
+          info,
+          sendMsg
         ]
       )
     )
