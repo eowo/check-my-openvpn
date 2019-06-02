@@ -1,6 +1,8 @@
 stages:
   - test
-  - name: deploy
+  - name: deploy-lw
+    if: tag IS present
+  - name: deploy-m
     if: tag IS present
 jobs:
   include:
@@ -28,7 +30,7 @@ jobs:
         - yarn lint
         - yarn test --ci
         - codecov
-    - stage: deploy
+    - stage: deploy-lw
       sudo: required
       dist: trusty
       language: node_js
@@ -66,7 +68,44 @@ jobs:
         file:
           - dist/*.exe
           - dist/*.deb
-          - dist/*.AppImage
+        skip_cleanup: true
+        overwrite: true
+        on:
+          tags: true
+          repo: eowo/check-my-openvpn
+    - stage: deploy-m
+      os: osx
+      osx_image: xcode9.0
+      language: node_js
+      node_js: "10"
+      env: >-
+        ELECTRON_CACHE=$HOME/.cache/electron
+        ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+      cache:
+        yarn: true
+        directories:
+          - node_modules
+          - src/www/node_modules
+          - $HOME/.cache/electron
+          - $HOME/.cache/electron-builder
+      before_install:
+        - nvm install
+        - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.15.2
+        - export PATH="$HOME/.yarn/bin:$PATH"
+      before_script:
+        - bash scripts/set-app-version.sh
+        - yarn install
+        - yarn bundle:prod
+      script:
+        - yarn build:m
+      deploy:
+        provider: releases
+        prerelease: true
+        api_key:
+          secure: pR1bAffZ1iN7fCK/wbBUdr0fQIFN7Vh2rtou99l1HYejWNle4Vd4H+2Qu7fEIcYqo6CL+42AFyOljUdCVENNy2RRsBIREgq4CiVr+QQHiC4rrLpOa8yQk2wa+/esF8IKwxftFCqJ9NWbDDntk5gDM+2ZVIdyAF0Ns4xbkEFouQDPlp0b7qpNydE6NWsqBwiCLu7GzpSiaGiU3L09Ht+xKSfv61nMnc1I9huUjBDJyxzUKBA8+rwevGMuduv02CbrvhcPK+TwRt2B+mZjBO6MfkqKAQqEJPI2PKG47Sm4Y/SolaT3HPjeOzjJK8zN5mN1u9xSkb0YSGZEYvZvLs8+5YuYsaViBdLYVlTiUZVbkirwF1OCxZkXOK2F7OkDtWa5tzyCjTWPSw75JeTwa42MDKTaGznXrLRKgURlK31Y5Re+HGn2UhnapQCgBy0qO1ZpvL2wG0JgY+GA3mfSkCbY2UsHr8AlKq9C3CNIyVAXLRKrjWIIAqQmRIuDWIzYqbP96BL1rA1yO7O1AKwoCHHMTIUA38mZ23+bEErq34Xpz7NDuwOwT+adg2ql6dRY+F3tGUiJd/AFPjWAItwL+En95vIQ4kN6O5px2BrIvAG3WuFwSet2DrxGs6PY+WUWx3aUcWsRaqu6MADnhRwz2SmNs4+ezKVIghOqU1u5cllQRfA=
+        file_glob: true
+        file:
+          - dist/*.dmg
         skip_cleanup: true
         overwrite: true
         on:
