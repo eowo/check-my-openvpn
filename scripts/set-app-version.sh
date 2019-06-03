@@ -2,5 +2,5 @@
 
 : ${TRAVIS_TAG:?"TRAVIS_TAG env is required!"}
 
-sed -i -r -e "s/(\"version\": ).*/\1\"$TRAVIS_TAG\",/g" ./package.json
-sed -i -r -e "s/(\"version\": ).*/\1\"$TRAVIS_TAG\",/g" ./src/www/package.json
+perl -0777 -i -p -e "s/(\"version\": \").*(\")/\${1}$TRAVIS_TAG\${2}/g" ./package.json
+perl -0777 -i -p -e "s/(\"version\": \").*(\")/\${1}$TRAVIS_TAG\${2}/g" ./src/www/package.json
